@@ -1,0 +1,2270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZT/SQV QA Callout Handbook</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0c10;
+    --surface: #111318;
+    --surface2: #181c24;
+    --border: #22283a;
+    --text: #e2e8f0;
+    --text-muted: #64748b;
+    --text-dim: #94a3b8;
+    --accent-a: #22d3ee;
+    --accent-b: #f59e0b;
+    --accent-c: #f97316;
+    --accent-d: #ef4444;
+    --accent-sqv: #22d3ee;
+    --accent-zt: #f97316;
+    --green: #10b981;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo-badge {
+    background: linear-gradient(135deg, var(--accent-c), var(--accent-d));
+    color: #fff;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    letter-spacing: 2px;
+    clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+  }
+
+  .logo-title {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: var(--text);
+    text-transform: uppercase;
+  }
+
+  .logo-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: var(--mono);
+  }
+
+  nav {
+    display: flex;
+    gap: 4px;
+  }
+
+  .nav-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 6px 14px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+  }
+
+  .nav-btn:hover, .nav-btn.active {
+    border-color: var(--accent-c);
+    color: var(--accent-c);
+    background: rgba(249,115,22,0.06);
+  }
+
+  /* LAYOUT */
+  .app { display: flex; min-height: calc(100vh - 65px); }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 280px;
+    flex-shrink: 0;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    max-height: calc(100vh - 65px);
+    position: sticky;
+    top: 65px;
+  }
+
+  .sidebar-section {
+    padding: 12px 16px 4px;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    border-top: 1px solid var(--border);
+    margin-top: 8px;
+  }
+
+  .sidebar-section:first-child { border-top: none; margin-top: 0; }
+
+  .sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 16px;
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--text-dim);
+    transition: all 0.15s;
+    border-left: 3px solid transparent;
+  }
+
+  .sidebar-item:hover {
+    background: var(--surface2);
+    color: var(--text);
+  }
+
+  .sidebar-item.active {
+    background: var(--surface2);
+    color: var(--text);
+    border-left-color: var(--accent-c);
+  }
+
+  .sidebar-item .item-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    min-width: 20px;
+  }
+
+  .sidebar-item .item-class {
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 600;
+    padding: 2px 5px;
+    border-radius: 2px;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  .class-a { background: rgba(34,211,238,0.15); color: var(--accent-a); }
+  .class-b { background: rgba(245,158,11,0.15); color: var(--accent-b); }
+  .class-c { background: rgba(249,115,22,0.15); color: var(--accent-c); }
+  .class-d { background: rgba(239,68,68,0.15); color: var(--accent-d); }
+
+  /* MAIN CONTENT */
+  main {
+    flex: 1;
+    overflow-y: auto;
+    padding: 32px;
+  }
+
+  /* VIEWS */
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* DECISION TREE VIEW */
+  .decision-tree {
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  .dt-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .dt-header h2 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+  }
+
+  .dt-header p {
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+
+  .dt-step {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 24px;
+    margin-bottom: 0;
+    position: relative;
+  }
+
+  .dt-step.hidden { display: none; }
+
+  .dt-connector {
+    width: 1px;
+    height: 24px;
+    background: var(--border);
+    margin: 0 auto;
+  }
+
+  .dt-step-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .dt-question {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    line-height: 1.4;
+  }
+
+  .dt-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .dt-option {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 13px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 2px;
+    flex: 1;
+    min-width: 120px;
+    text-align: center;
+  }
+
+  .dt-option:hover {
+    border-color: var(--accent-c);
+    color: var(--accent-c);
+    background: rgba(249,115,22,0.06);
+  }
+
+  .dt-option.selected {
+    border-color: var(--accent-c);
+    background: rgba(249,115,22,0.1);
+    color: var(--accent-c);
+  }
+
+  .dt-breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 24px;
+    align-items: center;
+  }
+
+  .dt-crumb {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    padding: 3px 8px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+  }
+
+  .dt-crumb-sep { color: var(--text-muted); font-size: 12px; }
+
+  .dt-result {
+    background: var(--surface);
+    border: 1px solid;
+    border-radius: 2px;
+    padding: 28px;
+    margin-top: 0;
+    max-width: 860px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .dt-result.result-a { border-color: var(--accent-a); }
+  .dt-result.result-b { border-color: var(--accent-b); }
+  .dt-result.result-c { border-color: var(--accent-c); }
+  .dt-result.result-d { border-color: var(--accent-d); }
+  .dt-result.result-coaching { border-color: var(--green); }
+  .dt-result.result-invalid { border-color: var(--text-muted); }
+
+  .dt-result-badge {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    padding: 4px 12px;
+    clip-path: polygon(5px 0%, 100% 0%, calc(100% - 5px) 100%, 0% 100%);
+    margin-bottom: 16px;
+  }
+
+  .badge-a { background: var(--accent-a); color: #000; }
+  .badge-b { background: var(--accent-b); color: #000; }
+  .badge-c { background: var(--accent-c); color: #fff; }
+  .badge-d { background: var(--accent-d); color: #fff; }
+  .badge-coaching { background: var(--green); color: #000; }
+  .badge-invalid { background: var(--text-muted); color: #000; }
+
+  .dt-result h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+  .dt-result p { color: var(--text-dim); font-size: 14px; line-height: 1.6; }
+
+  .dt-reset-btn {
+    margin-top: 20px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 8px 16px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+  }
+
+  .dt-reset-btn:hover {
+    border-color: var(--accent-c);
+    color: var(--accent-c);
+  }
+
+  /* SELECT DROPDOWN */
+  .dt-select-wrap {
+    position: relative;
+    margin-bottom: 12px;
+  }
+
+  .dt-select {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 13px;
+    padding: 10px 36px 10px 14px;
+    cursor: pointer;
+    appearance: none;
+    border-radius: 2px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .dt-select:focus { border-color: var(--accent-c); }
+
+  .dt-select-arrow {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
+  }
+
+  /* REFERENCE VIEW */
+  .ref-controls {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .search-box {
+    flex: 1;
+    min-width: 240px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 13px;
+    padding: 10px 16px;
+    outline: none;
+    border-radius: 2px;
+    transition: border-color 0.2s;
+  }
+
+  .search-box:focus { border-color: var(--accent-c); }
+  .search-box::placeholder { color: var(--text-muted); }
+
+  .filter-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 8px 14px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+    border-radius: 2px;
+  }
+
+  .filter-btn:hover, .filter-btn.on {
+    background: rgba(249,115,22,0.08);
+    border-color: var(--accent-c);
+    color: var(--accent-c);
+  }
+
+  .filter-btn.fa.on { border-color: var(--accent-a); color: var(--accent-a); background: rgba(34,211,238,0.08); }
+  .filter-btn.fb.on { border-color: var(--accent-b); color: var(--accent-b); background: rgba(245,158,11,0.08); }
+  .filter-btn.fc.on { border-color: var(--accent-c); color: var(--accent-c); background: rgba(249,115,22,0.08); }
+  .filter-btn.fd.on { border-color: var(--accent-d); color: var(--accent-d); background: rgba(239,68,68,0.08); }
+
+  .scenario-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 16px;
+  }
+
+  .scenario-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .scenario-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+  }
+
+  .scenario-card.ca::before { background: var(--accent-a); }
+  .scenario-card.cb::before { background: var(--accent-b); }
+  .scenario-card.cc::before { background: var(--accent-c); }
+  .scenario-card.cd::before { background: var(--accent-d); }
+
+  .scenario-card:hover {
+    border-color: #334155;
+    background: var(--surface2);
+    transform: translateY(-1px);
+  }
+
+  .card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .card-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-muted);
+  }
+
+  .card-badges {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  .badge-type {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 2px 6px;
+    border-radius: 1px;
+  }
+
+  .sqv-badge { background: rgba(34,211,238,0.15); color: var(--accent-sqv); }
+  .zt-badge { background: rgba(249,115,22,0.15); color: var(--accent-zt); }
+
+  .card-name {
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: 8px;
+  }
+
+  .card-category {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+  }
+
+  /* DETAIL MODAL */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.8);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s;
+  }
+
+  .modal-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    width: 100%;
+    max-width: 720px;
+    max-height: 85vh;
+    overflow-y: auto;
+    transform: translateY(16px);
+    transition: transform 0.25s;
+  }
+
+  .modal-overlay.open .modal { transform: translateY(0); }
+
+  .modal-header {
+    padding: 24px 28px 20px;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: var(--surface);
+    z-index: 10;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .modal-close {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 18px;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    border-radius: 2px;
+  }
+
+  .modal-close:hover { border-color: var(--accent-d); color: var(--accent-d); }
+
+  .modal-body { padding: 28px; }
+
+  .modal-meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .meta-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 10px 14px;
+    border-radius: 2px;
+  }
+
+  .meta-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .meta-value {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .section-head {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .check-list {
+    list-style: none;
+    margin-bottom: 24px;
+  }
+
+  .check-list li {
+    display: flex;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.5;
+    padding: 5px 0;
+  }
+
+  .check-list li::before {
+    content: '▸';
+    color: var(--accent-c);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .check-list.no-list li::before {
+    content: '✕';
+    color: var(--accent-d);
+  }
+
+  .callout-template {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 16px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.7;
+    white-space: pre-wrap;
+    margin-bottom: 24px;
+  }
+
+  .inconsistency-note {
+    background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.25);
+    border-radius: 2px;
+    padding: 12px 16px;
+    font-size: 12px;
+    color: var(--accent-b);
+    font-family: var(--mono);
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+
+  .source-note {
+    background: rgba(34,211,238,0.05);
+    border: 1px solid rgba(34,211,238,0.15);
+    border-radius: 2px;
+    padding: 12px 16px;
+    font-size: 12px;
+    color: var(--accent-a);
+    font-family: var(--mono);
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+
+  /* OVERVIEW PAGE */
+  .overview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+
+  .overview-stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 24px;
+    border-radius: 2px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .overview-stat::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+  }
+
+  .overview-stat.oa::after { background: var(--accent-a); }
+  .overview-stat.ob::after { background: var(--accent-b); }
+  .overview-stat.oc::after { background: var(--accent-c); }
+  .overview-stat.od::after { background: var(--accent-d); }
+
+  .stat-num {
+    font-size: 40px;
+    font-weight: 700;
+    font-family: var(--mono);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .stat-num.ca { color: var(--accent-a); }
+  .stat-num.cb { color: var(--accent-b); }
+  .stat-num.cc { color: var(--accent-c); }
+  .stat-num.cd { color: var(--accent-d); }
+
+  .stat-label { font-size: 12px; color: var(--text-muted); }
+  .stat-sub { font-size: 11px; color: var(--text-dim); margin-top: 4px; font-family: var(--mono); }
+
+  .matrix-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 32px;
+    font-size: 13px;
+  }
+
+  .matrix-table th {
+    background: var(--surface2);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .matrix-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-dim);
+    vertical-align: top;
+  }
+
+  .matrix-table tr:last-child td { border-bottom: none; }
+  .matrix-table tr:hover td { background: var(--surface); }
+
+  .tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 1px;
+  }
+
+  .page-title {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    margin-bottom: 8px;
+    line-height: 1.1;
+  }
+
+  .page-sub {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-bottom: 32px;
+    font-family: var(--mono);
+  }
+
+  .section-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    letter-spacing: -0.25px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .pill {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    border: 1px solid;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #334155; }
+
+  /* No results */
+  .no-results {
+    text-align: center;
+    color: var(--text-muted);
+    padding: 60px 20px;
+    font-family: var(--mono);
+    font-size: 13px;
+    grid-column: 1/-1;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    main { padding: 20px 16px; }
+    header { padding: 14px 16px; }
+    .logo-sub { display: none; }
+    nav { gap: 2px; }
+    .nav-btn { padding: 5px 10px; font-size: 10px; }
+    .scenario-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-badge">ZT/SQV</div>
+    <div>
+      <div class="logo-title">QA Callout Handbook</div>
+      <div class="logo-sub">49-Scenario · Strict Mapping · New Sanction Severity</div>
+    </div>
+  </div>
+  <nav>
+    <button class="nav-btn active" onclick="showView('overview')">Overview</button>
+    <button class="nav-btn" onclick="showView('decision')">Decision Tree</button>
+    <button class="nav-btn" onclick="showView('reference')">Reference</button>
+  </nav>
+</header>
+
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-section">Class A — SQV · Verbal Warning</div>
+    <!-- filled by JS -->
+  </aside>
+
+  <!-- MAIN -->
+  <main>
+
+    <!-- OVERVIEW -->
+    <div class="view active" id="view-overview">
+      <div class="page-title">ZT / SQV QA Handbook</div>
+      <div class="page-sub">// 49-Scenario Strict Mapping Edition — New Sanction Severity Applied</div>
+
+      <div class="overview-grid">
+        <div class="overview-stat oa">
+          <div class="stat-num ca">6</div>
+          <div class="stat-label">Class A Scenarios</div>
+          <div class="stat-sub">SQV · Verbal Warning</div>
+        </div>
+        <div class="overview-stat ob">
+          <div class="stat-num cb">14</div>
+          <div class="stat-label">Class B Scenarios</div>
+          <div class="stat-sub">SQV · Written Warning</div>
+        </div>
+        <div class="overview-stat oc">
+          <div class="stat-num cc">17</div>
+          <div class="stat-label">Class C Scenarios</div>
+          <div class="stat-sub">ZT · Final Written Warning</div>
+        </div>
+        <div class="overview-stat od">
+          <div class="stat-num cd">12</div>
+          <div class="stat-label">Class D Scenarios</div>
+          <div class="stat-sub">ZT · Disciplinary Action</div>
+        </div>
+      </div>
+
+      <div class="section-title">Severity & Sanction Matrix</div>
+      <table class="matrix-table">
+        <thead>
+          <tr>
+            <th>Level</th>
+            <th>Class</th>
+            <th>Type</th>
+            <th>Sanction Action</th>
+            <th>Source</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="tag class-a">A</span></td>
+            <td>Class A</td>
+            <td><span class="tag sqv-badge">SQV</span></td>
+            <td>Verbal Warning</td>
+            <td style="color:var(--text-muted)">New Sanction column</td>
+          </tr>
+          <tr>
+            <td><span class="tag class-b">B</span></td>
+            <td>Class B</td>
+            <td><span class="tag sqv-badge">SQV</span></td>
+            <td>Written Warning</td>
+            <td style="color:var(--text-muted)">New Sanction column</td>
+          </tr>
+          <tr>
+            <td><span class="tag class-c">C</span></td>
+            <td>Class C</td>
+            <td><span class="tag zt-badge">ZT</span></td>
+            <td>Final Written Warning</td>
+            <td style="color:var(--text-muted)">New Sanction column</td>
+          </tr>
+          <tr>
+            <td><span class="tag class-d">D</span></td>
+            <td>Class D</td>
+            <td><span class="tag zt-badge">ZT</span></td>
+            <td>Disciplinary Action</td>
+            <td style="color:var(--text-muted)">New Sanction column</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="section-title">QA Decision Flow</div>
+      <table class="matrix-table">
+        <thead>
+          <tr><th>#</th><th>Step</th><th>Instruction</th></tr>
+        </thead>
+        <tbody>
+          <tr><td style="color:var(--accent-c);font-family:var(--mono)">01</td><td style="font-weight:600;color:var(--text)">Identify behavior</td><td>Review transcript/system record before selecting violation</td></tr>
+          <tr><td style="color:var(--accent-c);font-family:var(--mono)">02</td><td style="font-weight:600;color:var(--text)">Match scenario</td><td>Match to original Violation Scenario — no closest-fit</td></tr>
+          <tr><td style="color:var(--accent-c);font-family:var(--mono)">03</td><td style="font-weight:600;color:var(--text)">Confirm agent control</td><td>Exclude system issues, tool failures, customer-caused, approved exceptions</td></tr>
+          <tr><td style="color:var(--accent-c);font-family:var(--mono)">04</td><td style="font-weight:600;color:var(--text)">Verify evidence</td><td>Required evidence for that exact scenario must be present</td></tr>
+          <tr><td style="color:var(--accent-c);font-family:var(--mono)">05</td><td style="font-weight:600;color:var(--text)">Apply severity</td><td>Use Level of Severity from <strong>New Sanction only</strong></td></tr>
+          <tr><td style="color:var(--accent-c);font-family:var(--mono)">06</td><td style="font-weight:600;color:var(--text)">Check display name</td><td>Blue display name for readability only; cite original scenario in callout</td></tr>
+          <tr><td style="color:var(--accent-c);font-family:var(--mono)">07</td><td style="font-weight:600;color:var(--text)">FPS COD</td><td>Mark as "Matrix lookup required" if not confirmed from official source</td></tr>
+        </tbody>
+      </table>
+
+      <div class="section-title">Categories Covered</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:40px;">
+        <span class="pill" style="color:var(--accent-a);border-color:var(--accent-a)">Chat &amp; Workflow Compliance</span>
+        <span class="pill" style="color:var(--accent-b);border-color:var(--accent-b)">Call/Chat Avoidance</span>
+        <span class="pill" style="color:var(--accent-c);border-color:var(--accent-c)">Data Privacy &amp; Security</span>
+        <span class="pill" style="color:var(--accent-d);border-color:var(--accent-d)">Sales &amp; Order Integrity</span>
+        <span class="pill" style="color:var(--text-dim);border-color:var(--border)">Misrepresentation &amp; Professional Conduct</span>
+      </div>
+    </div>
+
+    <!-- DECISION TREE -->
+    <div class="view" id="view-decision">
+      <div class="decision-tree">
+        <div class="dt-header">
+          <h2>QA Decision Tree</h2>
+          <p>Answer each question to identify the correct violation class and sanction.</p>
+        </div>
+        <div id="dt-breadcrumb" class="dt-breadcrumb" style="display:none"></div>
+        <div id="dt-flow"></div>
+      </div>
+    </div>
+
+    <!-- REFERENCE -->
+    <div class="view" id="view-reference">
+      <div class="page-title">Scenario Reference</div>
+      <div class="page-sub">// All 49 scenarios — click any card for full detail</div>
+      <div class="ref-controls">
+        <input class="search-box" type="text" placeholder="Search scenarios, categories, keywords..." oninput="filterCards()" id="search-input">
+        <button class="filter-btn fa" onclick="toggleFilter('A')" id="fA">A</button>
+        <button class="filter-btn fb" onclick="toggleFilter('B')" id="fB">B</button>
+        <button class="filter-btn fc" onclick="toggleFilter('C')" id="fC">C</button>
+        <button class="filter-btn fd" onclick="toggleFilter('D')" id="fD">D</button>
+        <button class="filter-btn" onclick="clearFilters()" style="margin-left:4px">All</button>
+      </div>
+      <div class="scenario-grid" id="scenario-grid"></div>
+    </div>
+
+  </main>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal-content"></div>
+</div>
+
+<script>
+// ============================
+// DATA
+// ============================
+const SCENARIOS = [
+  {id:1,cat:"CHAT & WORKFLOW COMPLIANCE",name:"Grammar errors",orig:"Grammar errors (Five or more in a single chat)",cls:"A",type:"SQV",sanction:"Verbal Warning",legacy:"Class B",rationale:"Minor quality/process error, typically correctable through coaching.",source:"If not customer impacting, not a ZT or SQV but a coaching only.",inconsistent:true,
+  use:["Five or more clear grammar errors in one chat","Errors materially affect professionalism, readability, customer understanding, or brand presentation","Errors attributable to the agent, not copied customer text or system-generated text"],
+  dontuse:["Fewer than five minor errors","Typos that do not affect understanding or customer experience","Errors caused by templates, system text, or customer-provided language"],
+  evidence:["Count and quote each grammar error","Show the relevant transcript excerpts","Explain the customer-facing impact or why it is coaching only if there is no impact"],
+  impact:"Workflow integrity, reporting accuracy, customer resolution, or follow-up risk.",
+  disputes:["Overcounting minor typos as grammar errors","Calling it ZT/SQV when the matrix note says no customer impact should be coaching only"]},
+
+  {id:2,cat:"CHAT & WORKFLOW COMPLIANCE",name:"Poor / vague / backdated documentation",orig:"Poor note-taking / Vague documentation / Documentation noncompliance/Backdated notes (Entering notes after the fact without correct timestamps)",cls:"A",type:"SQV",sanction:"Verbal Warning",legacy:"Class B",rationale:"Procedural errors that impact quality and efficiency.",source:"System issues → coaching only. Intentional false tracking → terminable offense.",inconsistent:true,
+  use:["Note is missing, vague, backdated without correct timestamp, or does not meet documentation requirements","Documentation gap affects continuity, accountability, or future account handling","Issue is not merely a preference for a different note style"],
+  dontuse:["Notes are short but include the material action and resolution","Missing detail does not affect next handling","Issue is a tracked system issue rather than agent-controlled behavior"],
+  evidence:["Required documentation standard or expected note elements","Actual note or proof of no note","Specific missing or vague element and why it matters"],
+  impact:"Workflow integrity, reporting accuracy, customer resolution, or follow-up risk.",
+  disputes:["Treating a formatting preference as a violation","Calling late notes without proving missing/incorrect timestamp requirements"]},
+
+  {id:3,cat:"CHAT & WORKFLOW COMPLIANCE",name:"Chat closure non-compliance",orig:"Chat closure non-compliance / Policy violation in closure",cls:"A",type:"SQV",sanction:"Verbal Warning",legacy:"Class B",rationale:"Procedural failure that disrupts workflow, but not customer-facing fraud.",source:"Not following the 21 or 211, or if excessive (more than 2-3 mins)",inconsistent:true,
+  use:["Case/chat closed contrary to required closure policy, disposition standard, or HUB case closure process","Agent used an incorrect disposition or failed to disposition when required","Closure issue creates tracking, reporting, or follow-up risk"],
+  dontuse:["Closure followed the approved inactive/customer unresponsive process","Disposition is acceptable based on the resolved intent","System limitation prevented correct closure and was documented/escalated"],
+  evidence:["Case/chat closure time and state","Disposition used or proof no disposition was entered","Required closure/disposition rule that was missed"],
+  impact:"Workflow integrity, reporting accuracy, customer resolution, or follow-up risk.",
+  disputes:["Not distinguishing wrong disposition from QA preference","No proof that the selected disposition was actually incorrect"]},
+
+  {id:4,cat:"CHAT & WORKFLOW COMPLIANCE",name:"Chat inactivity",orig:"Chat inactivity (Two+ instances of 2+ mins or >5 mins unexcused)",cls:"A",type:"SQV",sanction:"Verbal Warning",legacy:"Class B",rationale:"Moderate form of call avoidance; disrupts service levels and suggests intentional idle time.",source:"None listed",inconsistent:true,
+  use:["Agent displayed avoidant behavior tied to the scenario threshold or behavior","Action was agent-controlled and not supported by process","Customer/queue handling was materially affected"],
+  dontuse:["Documented system/tool issue explains the behavior","Supervisor-approved exception applies","Threshold or behavior is not met"],
+  evidence:["Timestamped transcript/call log showing start and end of gap","Hold/refresh messages or absence of them","System notes/escalation record if agent claims tool issue","Queue/post-call/outbound records when relevant"],
+  impact:"Workflow integrity, reporting accuracy, customer resolution, or follow-up risk.",
+  disputes:["Missing timestamp proof","Not excluding tracked system issues","Using old thresholds instead of current strict scenario threshold"]},
+
+  {id:5,cat:"DATA PRIVACY & SECURITY",name:"Over Validation",orig:"Over Validation (Validating the account even though it wasn't needed)",cls:"A",type:"SQV",sanction:"Verbal Warning",legacy:"Class B",rationale:"Minor procedural error; harmless to security, but a waste of time.",source:"None listed",inconsistent:true,
+  use:["Agent performed account validation when validation was not required","Unnecessary validation created privacy/friction/process risk","Contact type did not require account access or authentication"],
+  dontuse:["Validation was required for account-specific information or changes","Customer requested account changes, bills, service details, or protected information","Policy required verification before proceeding"],
+  evidence:["Customer request type","Validation steps performed","Why validation was not required"],
+  impact:"Privacy, account security, CPNI/SPI/PCI, or unauthorized access risk.",
+  disputes:["Not proving validation was unnecessary","Confusing normal CPNI protection with over-validation"]},
+
+  {id:6,cat:"CHAT & WORKFLOW COMPLIANCE",name:"Improper case closure",orig:"Improper case closure (Closing cases or using incorrect dispositions in HUB)",cls:"A",type:"SQV",sanction:"Verbal Warning",legacy:"Class B",rationale:"Impacts reporting/metrics and service recovery efforts.",source:"None listed",inconsistent:true,
+  use:["Case/chat closed contrary to required closure policy, disposition standard, or HUB case closure process","Agent used an incorrect disposition or failed to disposition when required","Closure issue creates tracking, reporting, or follow-up risk"],
+  dontuse:["Closure followed the approved inactive/customer unresponsive process","Disposition is acceptable based on the resolved intent","System limitation prevented correct closure and was documented/escalated"],
+  evidence:["Case/chat closure time and state","Disposition used or proof no disposition was entered","Required closure/disposition rule that was missed"],
+  impact:"Workflow integrity, reporting accuracy, customer resolution, or follow-up risk.",
+  disputes:["Not distinguishing wrong disposition from QA preference","No proof that the selected disposition was actually incorrect"]},
+
+  {id:7,cat:"CHAT & WORKFLOW COMPLIANCE",name:"Incorrect workflow / skipped troubleshooting",orig:"Incorrect workflow usage / Skipped troubleshooting (e.g., line tests)",cls:"B",type:"SQV",sanction:"Written Warning",legacy:"Class B",rationale:"Serious procedural failure that wastes customer time and risks technical errors/truck rolls.",source:"All non-agent opportunity (system and tools) should not be treated as a ZT or SQV but a coaching only.",inconsistent:false,
+  use:["Behavior exactly matches the violation scenario","Behavior is agent-controlled","Outcome creates material customer, process, compliance, business, or documentation risk"],
+  dontuse:["Only coaching opportunity exists","Evidence is incomplete","No exact matrix match"],
+  evidence:["Transcript/system proof","Applicable process/standard","Material impact"],
+  impact:"Workflow integrity, reporting accuracy, customer resolution, or follow-up risk.",
+  disputes:["Partial match or assumption-based callout"]},
+
+  {id:8,cat:"CALL/CHAT AVOIDANCE",name:"Ignoring inbound (10–30 sec)",orig:"Ignoring inbound interactions (10 to 30 seconds)",cls:"B",type:"SQV",sanction:"Written Warning",legacy:"Class B",rationale:"Failure to adhere to basic service level metrics; suggests intentional delay.",source:"Tracked system issue → coaching only. Intentional false tracking → terminable.",inconsistent:false,
+  use:["Customer sent an inbound message and agent did not respond for 10 to 30 seconds","No valid working/status update was provided","No documented tool/system issue explains the gap"],
+  dontuse:["Agent already set expectations and was actively working","Gap is covered by a tracked system issue","Customer did not send an inbound message requiring response"],
+  evidence:["Timestamped transcript/call log showing start and end of gap","Hold/refresh messages or absence of them","System notes/escalation record if agent claims tool issue","Queue/post-call/outbound records when relevant"],
+  impact:"Customer wait/abandonment risk, queue integrity risk, or productivity avoidance risk.",
+  disputes:["Missing timestamp proof","Not excluding tracked system issues","Using old thresholds"]},
+
+  {id:9,cat:"CALL/CHAT AVOIDANCE",name:"Ignoring inbound (post-call 1–2 min)",orig:"Ignoring inbound interactions (Staying in post-call status too long or keeping lines open - 1 minute - 2 minute)",cls:"B",type:"SQV",sanction:"Written Warning",legacy:"Class B",rationale:"Clear, intentional manipulation of system status to avoid incoming work (gross abuse of system).",source:"None listed",inconsistent:false,
+  use:["Agent stayed in post-call/wrap/open-line status beyond the threshold","Time was not supported by required after-contact work","Behavior affected availability, queue flow, or productivity integrity"],
+  dontuse:["Wrap time was needed for valid documentation or system processing","Supervisor-approved exception exists","Duration is below threshold"],
+  evidence:["Timestamped transcript/call log","Hold/refresh messages or absence","System notes/escalation record","Queue/post-call/outbound records"],
+  impact:"Customer wait/abandonment risk, queue integrity risk, or productivity avoidance risk.",
+  disputes:["Missing timestamp proof","Not excluding tracked system issues","Using old thresholds"]},
+
+  {id:10,cat:"CALL/CHAT AVOIDANCE",name:"Incorrect Transfer",orig:"Incorrect Transfer (Transfer is needed but the department is incorrect)",cls:"B",type:"SQV",sanction:"Written Warning",legacy:"Class B",rationale:"Wastes customer time and negatively impacts the customer experience (CX) and operational efficiency.",source:"None listed",inconsistent:false,
+  use:["Behavior exactly matches the violation scenario","Behavior is agent-controlled","Outcome creates material customer, process, compliance, business, or documentation risk"],
+  dontuse:["Only coaching opportunity exists","Evidence is incomplete","No exact matrix match"],
+  evidence:["Transcript/system proof","Applicable process/standard","Material impact"],
+  impact:"Customer wait/abandonment risk, queue integrity risk, or productivity avoidance risk.",
+  disputes:["Partial match or assumption-based callout"]},
+
+  {id:11,cat:"CALL/CHAT AVOIDANCE",name:"Dead air abuse (4–10 min)",orig:"Dead air abuse (Leaving customer on hold and or dead air for over 4 minutes to 10 minutes without refreshing the line)",cls:"B",type:"SQV",sanction:"Written Warning",legacy:"Class B",rationale:"Not stated in source matrix",source:"None listed",inconsistent:false,
+  use:["Customer was left on hold/dead air beyond the threshold in the scenario","Agent did not refresh the line/chat or show intent to return","Delay caused or risked disconnection, abandonment, or avoidant handling"],
+  dontuse:["Agent refreshed appropriately and set expectations","Silence was due to a documented system outage/tool issue","Duration does not meet the threshold"],
+  evidence:["Timestamped transcript/call log","Hold/refresh messages or absence","System notes/escalation record","Queue/post-call/outbound records"],
+  impact:"Customer wait/abandonment risk, queue integrity risk, or productivity avoidance risk.",
+  disputes:["Missing timestamp proof","Not excluding tracked system issues","Using old thresholds"]},
+
+  {id:12,cat:"DATA PRIVACY & SECURITY",name:"Unauthorized data sharing",orig:"Unauthorized data sharing (Giving internal-only or unapproved third-party numbers)",cls:"B",type:"SQV",sanction:"Written Warning",legacy:"Class B",rationale:"Breach of internal security/confidentiality rules.",source:"None listed",inconsistent:false,
+  use:["Agent gave internal-only, restricted, or unapproved third-party contact information","Number/resource was not approved for customer distribution","Disclosure could create privacy, security, or process risk"],
+  dontuse:["Contact information is customer-facing and approved","Agent directed customer to official support channel","No restricted information was shared"],
+  evidence:["Exact number/resource shared","Reference showing it is internal-only/unapproved","Customer-facing context"],
+  impact:"Privacy, account security, CPNI/SPI/PCI, or unauthorized access risk.",
+  disputes:["Not proving the shared resource is restricted"]},
+
+  {id:13,cat:"DATA PRIVACY & SECURITY",name:"CPNI violation (disclosure, no account change)",orig:"CPNI process violations (Disclosing account name, Wi-Fi name, email, etc. – no account changes)",cls:"B",type:"SQV",sanction:"Written Warning",legacy:"Class C",rationale:"Written Warning for the first offense without an account change.",source:"Update on TT (CBR), Replace Equipment",inconsistent:true,
+  use:["Agent performed or supported an account change without following required validation","Change involved protected account access, TCF, Frontier ID, VM PIN, equipment action, or similar","Required authentication/validation was missed or incomplete"],
+  dontuse:["No account change occurred","All required validation was completed before the change","Action was informational only and did not require the stricter process"],
+  evidence:["Account change performed","Required validation process","Transcript/system proof validation was missed or incomplete"],
+  impact:"Privacy, account security, CPNI/SPI/PCI, or unauthorized access risk.",
+  disputes:["Using this scenario for disclosure-only cases with no account change","Not proving the specific account change"]},
+
+  {id:14,cat:"CHAT & WORKFLOW COMPLIANCE",name:"Falsifying notes (troubleshooting not performed)",orig:"Falsifying notes (Troubleshooting process was documented but not performed)",cls:"B",type:"SQV",sanction:"Written Warning",legacy:"Class B",rationale:"Falsification of company records/fraud.",source:"None listed",inconsistent:false,
+  use:["Agent documented an action, disclosure, ticket, callback, troubleshooting step, or customer experience that did not occur","Note materially misrepresents the interaction or account handling","Mismatch can affect future handling, compliance, billing, or accountability"],
+  dontuse:["Notes are brief but factually accurate","Issue is wording preference only","System tracker issue exists unless intentional false tracking is present"],
+  evidence:["Exact note entered by the agent","Transcript excerpt or system record proving the documented action did not happen","Which part of the note is false or materially misleading"],
+  impact:"Workflow integrity, reporting accuracy, customer resolution, or follow-up risk.",
+  disputes:["Failing to prove intent or material mismatch","Using a vague note-quality issue when the stricter falsification scenario does not fit"]},
+
+  {id:15,cat:"SALES & ORDER INTEGRITY",name:"False limited-time offer urgency",orig:"Limited-Time offers (Creating a false sense of urgency when it's not true)",cls:"B",type:"SQV",sanction:"Written Warning",legacy:"Class D",rationale:"Deceptive sales practice intended to pressure the customer.",source:"None listed",inconsistent:true,
+  use:["Agent created false urgency by saying or implying an offer is limited-time when not true/verified","Urgency statement could pressure the customer into a decision","No approved source supports the urgency claim"],
+  dontuse:["Offer is actually time-limited and agent states it accurately","Agent uses neutral language without pressure","Agent says they need to verify offer availability"],
+  evidence:["Exact urgency language","Offer validity/availability source","Why the urgency was false or unsupported"],
+  impact:"Customer may make a purchase/order decision without accurate price, product, consent, or expectation.",
+  disputes:["No proof that urgency was false"]},
+
+  {id:16,cat:"SALES & ORDER INTEGRITY",name:"Failure to explain VAS loss / sales before resolution",orig:"Clearly inform customers of any loss when replacing a VAS / Pitching/Selling as the main priority over resolution",cls:"B",type:"SQV",sanction:"Written Warning",legacy:"Class C",rationale:"Poor judgment and process failure that risks churn/customer satisfaction.",source:"None listed",inconsistent:true,
+  use:["Agent replaced a VAS without clearly explaining what the customer would lose, or prioritized selling over resolving the original concern","Lost feature/benefit or unresolved primary issue was material","Customer decision could be affected by the missing explanation"],
+  dontuse:["Agent resolved or addressed the primary concern first","Agent disclosed the loss clearly","No VAS replacement or sale occurred"],
+  evidence:["Original customer concern","VAS replaced/pitched","Missing loss explanation or unresolved concern"],
+  impact:"Customer may make a purchase/order decision without accurate price, product, consent, or expectation.",
+  disputes:["Calling any offer as sales-first without proving resolution was bypassed"]},
+
+  {id:17,cat:"SALES & ORDER INTEGRITY",name:"Churn language / devaluing product",orig:"Churn Language (Encouraging the customer the option to cancel/devaluing the product)",cls:"B",type:"SQV",sanction:"Written Warning",legacy:"Class C",rationale:"Directly undermines retention efforts and revenue.",source:"None listed",inconsistent:true,
+  use:["Agent encouraged cancellation, devalued the product, or positioned leaving as an acceptable/better path instead of resolving/retaining appropriately","Language could drive churn or reduce product value","Statement was agent-led, not merely acknowledging customer's stated cancellation intent"],
+  dontuse:["Agent acknowledged a customer's cancellation request and followed retention path","Agent gave neutral policy info","Customer initiated churn intent and agent did not encourage it"],
+  evidence:["Exact churn/devaluing statement","Customer context","What correct retention/solution behavior should have been"],
+  impact:"Company risk includes invalid sale, billing dispute, churn, or regulatory/customer trust exposure.",
+  disputes:["Misreading neutral acknowledgment as churn encouragement"]},
+
+  {id:18,cat:"SALES & ORDER INTEGRITY",name:"Removing core services without retention path",orig:"Removing Core Services (Internet, Phone, Cable) – Must be transferred to Retention",cls:"B",type:"SQV",sanction:"Written Warning",legacy:"Class C",rationale:"Direct violation of a key operational rule leading to lost revenue opportunity.",source:"None listed",inconsistent:true,
+  use:["Agent removed core service such as internet, phone, or cable without following the required retention transfer/path","Service was core and retention handling was required","Removal or order progression occurred"],
+  dontuse:["Customer was transferred/referred correctly to retention path","Non-core/VAS service was removed","No removal/order was processed"],
+  evidence:["Service removed/requested","Core service status","Retention path requirement and what agent did"],
+  impact:"Company risk includes invalid sale, billing dispute, churn, or regulatory/customer trust exposure.",
+  disputes:["Confusing VAS removal with core-service removal"]},
+
+  {id:19,cat:"SALES & ORDER INTEGRITY",name:"Missing or incomplete VAS sales documentation",orig:"Document sales activity for VAS specific products only. Non compliance occurs if required documentation including product details, price, and MRC is incomplete or missing.",cls:"B",type:"SQV",sanction:"Written Warning",legacy:"Class C",rationale:"Critical sales procedure omissions that lead to compliance risk and customer disputes.",source:"None listed",inconsistent:true,
+  use:["Note is missing, vague, backdated without correct timestamp, or does not meet documentation requirements","Documentation gap affects continuity, accountability, or future account handling","Issue is not merely a preference for a different note style"],
+  dontuse:["Notes are short but include the material action and resolution","Missing detail does not affect next handling","Issue is a tracked system issue rather than agent-controlled behavior"],
+  evidence:["Required documentation standard or expected note elements","Actual note or proof of no note","Specific missing or vague element and why it matters"],
+  impact:"Invalid sale/order, billing dispute, misrepresentation, consent, or customer trust risk.",
+  disputes:["Treating a formatting preference as a violation","Calling late notes without proving missing/incorrect timestamp requirements"]},
+
+  {id:20,cat:"SALES & ORDER INTEGRITY",name:"Misrepresentation of products/services",orig:"Misrepresentation of products/services",cls:"B",type:"SQV",sanction:"Written Warning",legacy:"Not specified",rationale:"Use confusing or advance terms language to get a VAS product sale.",source:"None listed",inconsistent:false,
+  use:["Agent described a product/service inaccurately or misleadingly","Inaccurate description could affect customer decision or expectation","Correct product details were available"],
+  dontuse:["Agent gave a simplified but accurate explanation","Agent corrected the explanation before customer decided","Customer did not receive/act on the misinformation"],
+  evidence:["Agent statement","Correct product/service details","Why statement is misleading"],
+  impact:"Customer may make a purchase/order decision without accurate price, product, consent, or expectation.",
+  disputes:["No clear contradiction against official product guidance"]},
+
+  {id:21,cat:"CHAT & WORKFLOW COMPLIANCE",name:"Non-disclosure of fees",orig:"Non-disclosure of fees (Not informing about required fees/charges)",cls:"C",type:"ZT",sanction:"Final Written Warning",legacy:"Class C",rationale:"Directly impacts customer perception/trust and risks billing disputes.",source:"None listed",inconsistent:false,
+  use:["Agent failed to inform customer about required fees or charges","Fee was required to be disclosed under policy","Non-disclosure could lead to billing dispute or customer distrust"],
+  dontuse:["Fee was disclosed clearly during the interaction","No fee was applicable to the transaction","System prevented proper disclosure and was escalated"],
+  evidence:["Case/chat closure time and state","Disposition used or proof no disposition was entered","Required closure/disposition rule that was missed"],
+  impact:"Workflow integrity, reporting accuracy, customer resolution, or follow-up risk.",
+  disputes:["Not distinguishing wrong disposition from QA preference","No proof that the selected disposition was actually incorrect"]},
+
+  {id:22,cat:"CALL/CHAT AVOIDANCE",name:"Ignoring inbound (above 30 sec)",orig:"Ignoring inbound interactions (Above 30 seconds)",cls:"C",type:"ZT",sanction:"Final Written Warning",legacy:"Class C",rationale:"More severe failure to answer, often leading to abandoned calls/chats.",source:"Tracked system issue → coaching only. Intentional false tracking → terminable.",inconsistent:false,
+  use:["Customer sent an inbound message and the agent ignored it for more than 30 seconds","No valid system/tool issue or expectation-setting note","Delay indicates avoidant or non-responsive handling"],
+  dontuse:["Agent was in an approved hold/checking flow with refreshes","Delay is supported by a tracked system issue","No customer-facing impact or inbound message exists"],
+  evidence:["Timestamped transcript/call log","Hold/refresh messages or absence","System notes/escalation record","Queue/post-call/outbound records"],
+  impact:"Customer wait/abandonment risk, queue integrity risk, or productivity avoidance risk.",
+  disputes:["Missing timestamp proof","Not excluding tracked system issues","Using old thresholds"]},
+
+  {id:23,cat:"CALL/CHAT AVOIDANCE",name:"Ignoring inbound (wrap >2 min excessively)",orig:"Ignoring inbound interactions (Staying in post-call status too long or keeping lines open) - more than 2 minute Wrap time Excessively",cls:"C",type:"ZT",sanction:"Final Written Warning",legacy:"Class C",rationale:"Clear, intentional manipulation of system status to avoid incoming work (gross abuse of system).",source:"None listed",inconsistent:false,
+  use:["Agent stayed in post-call/wrap/open-line status beyond the threshold","Time was not supported by required after-contact work","Behavior affected availability, queue flow, or productivity integrity"],
+  dontuse:["Wrap time was needed for valid documentation or system processing","Supervisor-approved exception exists","Duration is below threshold"],
+  evidence:["Timestamped transcript/call log","Hold/refresh messages or absence","System notes/escalation record","Queue/post-call/outbound records"],
+  impact:"Customer wait/abandonment risk, queue integrity risk, or productivity avoidance risk.",
+  disputes:["Missing timestamp proof","Not excluding tracked system issues","Using old thresholds"]},
+
+  {id:24,cat:"CALL/CHAT AVOIDANCE",name:"Avoiding inbound flow (unnecessary outbound)",orig:"Avoiding inbound flow (Making unnecessary outbound calls)",cls:"C",type:"ZT",sanction:"Final Written Warning",legacy:"Class C",rationale:"Intentional system abuse and fraud to manipulate metrics and avoid assigned duties.",source:"No exceptions — agents are strictly prohibited from making outbound calls solely to avoid handling inbound calls.",inconsistent:false,
+  use:["Agent made unnecessary outbound calls instead of taking inbound flow","Outbound action was not process-required","Behavior reduced inbound availability or showed avoidance"],
+  dontuse:["Outbound was explicitly required by process","Outbound was supervisor-approved and documented","Action was not agent-controlled"],
+  evidence:["Timestamped transcript/call log","Hold/refresh messages or absence","System notes/escalation record","Queue/post-call/outbound records"],
+  impact:"Customer wait/abandonment risk, queue integrity risk, or productivity avoidance risk.",
+  disputes:["Missing timestamp proof","Not excluding tracked system issues","Using old thresholds"]},
+
+  {id:25,cat:"CALL/CHAT AVOIDANCE",name:"Unnecessary Transfer",orig:"Unnecessary Transfer",cls:"C",type:"ZT",sanction:"Final Written Warning",legacy:"Class C",rationale:"Transferring to AS for validation (any transfer made within scope of support with clear outline process and policy).",source:"None listed",inconsistent:false,
+  use:["Behavior exactly matches the violation scenario","Behavior is agent-controlled","Outcome creates material customer, process, compliance, business, or documentation risk"],
+  dontuse:["Only coaching opportunity exists","Evidence is incomplete","No exact matrix match"],
+  evidence:["Transcript/system proof","Applicable process/standard","Material impact"],
+  impact:"Customer wait/abandonment risk, queue integrity risk, or productivity avoidance risk.",
+  disputes:["Partial match or assumption-based callout"]},
+
+  {id:26,cat:"CALL/CHAT AVOIDANCE",name:"Hold / dead air misuse until disconnection",orig:"Misuse of hold and or dead air (Placing calls on hold without intent to return) until call got disconnected regardless if callback was made.",cls:"C",type:"ZT",sanction:"Final Written Warning",legacy:"Class C",rationale:"High severity CX failure; deliberate attempt to drop or avoid a call without official closure.",source:"None listed",inconsistent:false,
+  use:["Customer was left on hold/dead air beyond the threshold in the scenario","Agent did not refresh the line/chat or show intent to return","Delay caused or risked disconnection, abandonment, or avoidant handling"],
+  dontuse:["Agent refreshed appropriately and set expectations","Silence was due to a documented system outage/tool issue","Duration does not meet the threshold"],
+  evidence:["Timestamped transcript/call log","Hold/refresh messages or absence","System notes/escalation record","Queue/post-call/outbound records"],
+  impact:"Customer wait/abandonment risk, queue integrity risk, or productivity avoidance risk.",
+  disputes:["Missing timestamp proof","Not excluding tracked system issues","Using old thresholds"]},
+
+  {id:27,cat:"CALL/CHAT AVOIDANCE",name:"Dead air abuse (>10 min)",orig:"Dead air abuse (Leaving customer on hold and or dead air for over ten minutes without refreshing the line)",cls:"C",type:"ZT",sanction:"Final Written Warning",legacy:"Class C",rationale:"Severe CX failure due to negligence/inattention.",source:"None listed",inconsistent:false,
+  use:["Customer was left on hold/dead air beyond the threshold in the scenario","Agent did not refresh the line/chat or show intent to return","Delay caused or risked disconnection, abandonment, or avoidant handling"],
+  dontuse:["Agent refreshed appropriately and set expectations","Silence was due to a documented system outage/tool issue","Duration does not meet the threshold"],
+  evidence:["Timestamped transcript/call log","Hold/refresh messages or absence","System notes/escalation record","Queue/post-call/outbound records"],
+  impact:"Customer wait/abandonment risk, queue integrity risk, or productivity avoidance risk.",
+  disputes:["Missing timestamp proof","Not excluding tracked system issues","Using old thresholds"]},
+
+  {id:28,cat:"CALL/CHAT AVOIDANCE",name:"No Callbacks",orig:"No Callbacks (Not processing a call back after call disconnection)",cls:"C",type:"ZT",sanction:"Final Written Warning",legacy:"Class C",rationale:"Neglect of duty resulting in a complete failure of service for the customer.",source:"Unless OB is on hold",inconsistent:false,
+  use:["Call/chat disconnected and the scenario required a callback","Agent did not process the callback when required","No approved exception applies"],
+  dontuse:["Outbound is on hold or not allowed by the current process","Customer requested no callback","Callback was completed or properly queued"],
+  evidence:["Timestamped transcript/call log","Hold/refresh messages or absence","System notes/escalation record","Queue/post-call/outbound records"],
+  impact:"Customer wait/abandonment risk, queue integrity risk, or productivity avoidance risk.",
+  disputes:["Missing timestamp proof","Not excluding tracked system issues","Using old thresholds"]},
+
+  {id:29,cat:"DATA PRIVACY & SECURITY",name:"CPNI violation (sensitive info + account changes)",orig:"CPNI process violations (Disclosing sensitive account info - PIN/Passcode/subscriptions, etc + account changes.)",cls:"C",type:"ZT",sanction:"Final Written Warning",legacy:"Class C",rationale:"This involves changes to the customer's network, increasing the severity above a simple disclosure error.",source:"Sending bills, adding/removing equipment, Factory Reset",inconsistent:false,
+  use:["Agent performed or supported an account change without following required validation","Change involved protected account access, TCF, Frontier ID, VM PIN, equipment action, or similar account-control action","Required authentication/validation was missed or incomplete"],
+  dontuse:["No account change occurred","All required validation was completed before the change","Action was informational only and did not require the stricter process"],
+  evidence:["Account change performed","Required validation process","Transcript/system proof validation was missed or incomplete"],
+  impact:"Privacy, account security, CPNI/SPI/PCI, or unauthorized access risk.",
+  disputes:["Using this scenario for disclosure-only cases with no account change","Not proving the specific account change"]},
+
+  {id:30,cat:"SALES & ORDER INTEGRITY",name:"Incorrect pricing / intentional incomplete disclosure",orig:"Incorrect Pricing / Incomplete Non-disclosure (Intentionally misquoting MRC or NRC)",cls:"C",type:"ZT",sanction:"Final Written Warning",legacy:"Class D",rationale:"No mention of unit price after the promotional state",source:"If bill preview is not available. Failure to track will be call-out.",inconsistent:true,
+  use:["Agent intentionally misquoted MRC or NRC","Agent failed to disclose the full price including post-promotional rates","No bill preview available but agent failed to track"],
+  dontuse:["Closure followed the approved inactive/customer unresponsive process","Disposition is acceptable based on the resolved intent","System limitation prevented correct closure and was documented/escalated"],
+  evidence:["Case/chat closure time and state","Disposition used or proof no disposition was entered","Required closure/disposition rule that was missed"],
+  impact:"Invalid sale/order, billing dispute, misrepresentation, consent, or customer trust risk.",
+  disputes:["Not distinguishing wrong disposition from QA preference","No proof that the selected disposition was actually incorrect"]},
+
+  {id:31,cat:"CHAT & WORKFLOW COMPLIANCE",name:"Falsifying notes (legal disclosures, tickets, callbacks)",orig:"Falsifying notes (misrepresentation of customer experience), including but not limited to legal disclosures, creating tickets, and processing callbacks.",cls:"C",type:"ZT",sanction:"Final Written Warning",legacy:"Class C",rationale:"Not stated in source matrix",source:"None listed",inconsistent:false,
+  use:["Agent documented an action, disclosure, ticket, callback, troubleshooting step, or customer experience that did not occur","Note materially misrepresents the interaction or account handling","Mismatch can affect future handling, compliance, billing, or accountability"],
+  dontuse:["Notes are brief but factually accurate","Issue is wording preference only","System tracker issue exists unless intentional false tracking is present"],
+  evidence:["Exact note entered by the agent","Transcript excerpt or system record proving the documented action did not happen","Which part of the note is false or materially misleading"],
+  impact:"Workflow integrity, reporting accuracy, customer resolution, or follow-up risk.",
+  disputes:["Failing to prove intent or material mismatch","Using a vague note-quality issue when the stricter falsification scenario does not fit"]},
+
+  {id:32,cat:"SALES & ORDER INTEGRITY",name:"Offering unapproved promotions or credits",orig:"Offering unapproved promotions or credits (Used to influence the sale without authorization)",cls:"C",type:"ZT",sanction:"Final Written Warning",legacy:"Class D",rationale:"Misrepresentation and unauthorized financial exposure for the company.",source:"None listed",inconsistent:true,
+  use:["Agent offered a promotion, credit, discount, or incentive not approved/available","Offer was used to influence customer decision or sale","No valid authorization or source supports the offer"],
+  dontuse:["Offer was approved and customer eligible","Agent said they would check eligibility without promising","Credit was processed under approved policy"],
+  evidence:["Exact offered promo/credit","Eligibility/approval source","Proof customer was not eligible or offer unavailable"],
+  impact:"Customer may make a purchase/order decision without accurate price, product, consent, or expectation.",
+  disputes:["Not proving offer was unapproved"]},
+
+  {id:33,cat:"SALES & ORDER INTEGRITY",name:"Lying about product features / pricing / promotions",orig:"Lying about product features, pricing, promotions, or benefits",cls:"C",type:"ZT",sanction:"Final Written Warning",legacy:"Class D",rationale:"Intentional fraud to close a sale.",source:"None listed",inconsistent:true,
+  use:["Agent knowingly or materially gave false information about product features, pricing, promotions, or benefits","Statement was presented as fact","Correct information was available from policy, tool, or product reference"],
+  dontuse:["Agent misunderstood and corrected themselves before action","Agent used cautious language and promised to verify","Policy/source was unclear or conflicting"],
+  evidence:["Exact false statement","Correct product/policy reference","Customer reliance or potential impact"],
+  impact:"Customer may make a purchase/order decision without accurate price, product, consent, or expectation.",
+  disputes:["Not distinguishing error/misinformation from intentional lying"]},
+
+  {id:34,cat:"SALES & ORDER INTEGRITY",name:"Incorrect product / VAS product added",orig:"Incorrect Product / Incorrect VAS Product being added",cls:"C",type:"ZT",sanction:"Final Written Warning",legacy:"Class C",rationale:"Serious error leading to customer dissatisfaction and billing issues.",source:"None listed",inconsistent:false,
+  use:["Agent added, ordered, or positioned the wrong product/VAS compared with customer need/agreement","Incorrect product was actually added or materially advanced","Customer agreed to a different product or did not agree to the added product"],
+  dontuse:["Customer agreed to the product added","Product was discussed but not processed","Agent corrected the order before submission/impact"],
+  evidence:["Customer requested/agreed product","Product actually added/ordered","Order/bill/system proof"],
+  impact:"Customer may make a purchase/order decision without accurate price, product, consent, or expectation.",
+  disputes:["Confusing poor offer fit with incorrect product"]},
+
+  {id:35,cat:"SALES & ORDER INTEGRITY",name:"Failure to gain clear customer consent",orig:"Gain customer consent (Failure to get a clear YES, e.g., \"OK,\" \"uhum,\" \"sure\" are not valid) If customer responded with \"OK,\" \"uhum,\" \"sure\", agent needs to ask and secure a clear yes",cls:"C",type:"ZT",sanction:"Final Written Warning",legacy:"Class D",rationale:"This is a required step to prevent Slamming/Cramming. Failure to do so risks a Class D violation.",source:"None listed",inconsistent:true,
+  use:["Agent changed/added/removed service or submitted an order without explicit, documented customer consent","Consent was ambiguous, missing, or invalid under the scenario","Action changed the customer's service, bill, or order status"],
+  dontuse:["Customer clearly gave required consent/yes to the specific action","No service/order/account change occurred","Agent only discussed options without processing"],
+  evidence:["Exact customer response used as consent","Specific service/order change","Required consent language/standard"],
+  impact:"Customer may make a purchase/order decision without accurate price, product, consent, or expectation.",
+  disputes:["Treating 'okay'/'sure' as clear consent when the matrix requires clear YES, or calling it without proving action was processed"]},
+
+  {id:36,cat:"MISREPRESENTATION & PROFESSIONAL CONDUCT",name:"Escalation failure",orig:"Escalation failure (Not escalating/de-escalating calls as needed and ineffective de-escalation/ Refusal to honor customer's request for supcall)",cls:"C",type:"ZT",sanction:"Final Written Warning",legacy:"Class C",rationale:"Procedural failure that leads to prolonged customer frustration and negative CX.",source:"None listed",inconsistent:false,
+  use:["Customer requested supervisor/escalation or the process required escalation","Agent refused, delayed, mishandled, or failed to de-escalate/escalate appropriately","Issue remained unresolved or risk increased because escalation path was not followed"],
+  dontuse:["Agent attempted de-escalation and followed required escalation path","Supervisor/escalation was not required by process","Customer did not request escalation and no trigger existed"],
+  evidence:["Customer escalation request or process trigger","Agent response/refusal","Required escalation path"],
+  impact:"Professional conduct, customer trust, internal alignment, or business integrity risk.",
+  disputes:["No proof escalation was required or requested"]},
+
+  {id:37,cat:"MISREPRESENTATION & PROFESSIONAL CONDUCT",name:"Disengaged behavior",orig:"Disengaged behavior (Doing unrelated activities instead of assisting customers)",cls:"C",type:"ZT",sanction:"Final Written Warning",legacy:"Class D",rationale:"Gross Misconduct. Intentional dereliction of duty and time theft.",source:"If the unrelated activity resulted to incorrect resolution/ failing to understand the concern/ Unattentive to customer should merit to class D for first instance.",inconsistent:true,
+  use:["Agent performed unrelated activities instead of assisting the customer","Unrelated activity caused or contributed to incorrect resolution, missed issue, failure to understand, or customer impact","Behavior is observable through transcript, system, call, or activity evidence"],
+  dontuse:["Agent was actively checking tools or documenting","No customer impact or resolution error resulted where required","Evidence does not show unrelated activity"],
+  evidence:["Unrelated activity indicator","Customer issue/resolution impact","Timeline showing disengagement"],
+  impact:"Professional conduct, customer trust, internal alignment, and business integrity risk.",
+  disputes:["Assuming disengagement from delay alone"]},
+
+  {id:38,cat:"CALL/CHAT AVOIDANCE",name:"False issue reporting",orig:"False issue reporting (Claiming system/phone issues without proper escalation)",cls:"D",type:"ZT",sanction:"Disciplinary Action",legacy:"Class D",rationale:"Intentionally lying to management or the system to excuse poor performance or avoidance.",source:"None listed",inconsistent:false,
+  use:["Agent claimed system/phone issues without proper escalation or evidence","Claim was used to avoid handling or justify a call/chat issue","Required reporting/escalation was not completed"],
+  dontuse:["Real, documented system/phone issue exists","Agent escalated using the required path","Insufficient proof the report was false"],
+  evidence:["Timestamped transcript/call log","Hold/refresh messages or absence","System notes/escalation record","Queue/post-call/outbound records"],
+  impact:"Customer wait/abandonment risk, queue integrity risk, or productivity avoidance risk.",
+  disputes:["Missing timestamp proof","Not excluding tracked system issues","Using old thresholds"]},
+
+  {id:39,cat:"CALL/CHAT AVOIDANCE",name:"Improper call endings / cold transfer",orig:"Improper call endings (Dropping or cold transferring calls). Deliberate or cold transfer to different department",cls:"D",type:"ZT",sanction:"Disciplinary Action",legacy:"Class D",rationale:"Severe customer experience breach; often considered equivalent to abandoning a customer.",source:"None listed",inconsistent:false,
+  use:["Agent deliberately dropped, abandoned, or cold transferred the customer","Action bypassed required closure, transfer, or customer notice","Record supports intentional or improper ending"],
+  dontuse:["Call dropped due to verified system/phone issue","Warm/approved transfer path was followed","Customer disconnected first"],
+  evidence:["Timestamped transcript/call log","Hold/refresh messages or absence","System notes/escalation record","Queue/post-call/outbound records"],
+  impact:"Customer wait/abandonment risk, queue integrity risk, or productivity avoidance risk.",
+  disputes:["Missing timestamp proof","Not excluding tracked system issues","Using old thresholds"]},
+
+  {id:40,cat:"DATA PRIVACY & SECURITY",name:"Unauthorized system access",orig:"Unauthorized system access (Logging in under another employee credentials)",cls:"D",type:"ZT",sanction:"Disciplinary Action",legacy:"Class D",rationale:"Security violation and identity theft; high risk of fraud/data breach.",source:"None listed",inconsistent:false,
+  use:["Agent logged in under another employee's credentials or allowed credential sharing","Access was unauthorized or misattributed","System records or admission support the access issue"],
+  dontuse:["User used their assigned credentials","Authorized delegated access exists","No proof of credential misuse"],
+  evidence:["Login/access record","Credential owner vs user","Proof of unauthorized use"],
+  impact:"Privacy, account security, CPNI/SPI/PCI, or unauthorized access risk.",
+  disputes:["No objective access evidence"]},
+
+  {id:41,cat:"DATA PRIVACY & SECURITY",name:"SPI / PCI data mishandling",orig:"SPI/PCI data mishandling (Sharing, storing, or disclosing SPI/PCI data)",cls:"D",type:"ZT",sanction:"Disciplinary Action",legacy:"Class D",rationale:"Exposes the company to severe legal liability and financial penalties.",source:"None listed",inconsistent:false,
+  use:["Agent shared, stored, or disclosed SPI/PCI data outside approved handling","Data is payment-sensitive or personally sensitive","Behavior violates data handling restrictions"],
+  dontuse:["Data was handled through approved secure tool/process","No SPI/PCI data was captured/shared/stored","Redacted or tokenized data only was visible as allowed"],
+  evidence:["Exact SPI/PCI data handling behavior","Where it was shared/stored/disclosed","Approved process that should have been used"],
+  impact:"Privacy, account security, CPNI/SPI/PCI, or unauthorized access risk.",
+  disputes:["Not proving the data qualifies as SPI/PCI"]},
+
+  {id:42,cat:"DATA PRIVACY & SECURITY",name:"Unapproved tools usage",orig:"Unapproved tools usage (Using third-party tools/platforms to manage or store data)",cls:"D",type:"ZT",sanction:"Disciplinary Action",legacy:"Class D",rationale:"Creates an unsecure data environment, which can lead to major breaches.",source:"None listed",inconsistent:false,
+  use:["Agent used third-party or unapproved tools/platforms to manage, process, store, or transmit customer/account data","Tool is not approved for the work performed","Customer or company data was exposed to an unauthorized platform"],
+  dontuse:["Tool is approved by company process","No customer/account data was entered or stored","Tool was used for non-sensitive, general reference only where allowed"],
+  evidence:["Tool/platform used","Data entered/shared/stored","Approval status of the tool"],
+  impact:"Privacy, account security, CPNI/SPI/PCI, or unauthorized access risk.",
+  disputes:["Not proving data was managed/stored or that tool was unapproved"]},
+
+  {id:43,cat:"DATA PRIVACY & SECURITY",name:"CPNI violation — validation failure for account changes",orig:"CPNI process violations: Failure to follow validation processes for account changes (TCF, Frontier ID, etc.)",cls:"D",type:"ZT",sanction:"Disciplinary Action",legacy:"Class D",rationale:"Agent performed force validation and unlocked the account using PIN, passcode, or alternative authentication methods without properly notifying the customer.",source:"Change VM PIN, TCF activation",inconsistent:false,
+  use:["Agent performed or supported an account change without following required validation","Change involved protected account access, TCF, Frontier ID, VM PIN, equipment action, or similar account-control action","Required authentication/validation was missed or incomplete"],
+  dontuse:["No account change occurred","All required validation was completed before the change","Action was informational only and did not require the stricter process"],
+  evidence:["Account change performed","Required validation process","Transcript/system proof validation was missed or incomplete"],
+  impact:"Privacy, account security, CPNI/SPI/PCI, or unauthorized access risk.",
+  disputes:["Using this scenario for disclosure-only cases with no account change","Not proving the specific account change"]},
+
+  {id:44,cat:"SALES & ORDER INTEGRITY",name:"Slamming or cramming",orig:"Slamming or cramming (Changing/adding services without explicit consent)",cls:"D",type:"ZT",sanction:"Disciplinary Action",legacy:"Class D",rationale:"Sales fraud, illegal, and causes severe customer harm/regulatory exposure.",source:"None listed",inconsistent:false,
+  use:["Agent changed/added/removed service or submitted an order without explicit, documented customer consent","Consent was ambiguous, missing, or invalid under the scenario","Action changed the customer's service, bill, or order status"],
+  dontuse:["Customer clearly gave required consent/yes to the specific action","No service/order/account change occurred","Agent only discussed options without processing"],
+  evidence:["Exact customer response used as consent","Specific service/order change","Required consent language/standard"],
+  impact:"Customer may make a purchase/order decision without accurate price, product, consent, or expectation.",
+  disputes:["Treating 'okay'/'sure' as clear consent when the matrix requires clear YES, or calling it without proving action was processed"]},
+
+  {id:45,cat:"SALES & ORDER INTEGRITY",name:"Unauthorized service changes",orig:"Unauthorized service changes (Modifying customer services without documented consent)",cls:"D",type:"ZT",sanction:"Disciplinary Action",legacy:"Class D",rationale:"Considered a form of slamming/cramming or fraud.",source:"None listed",inconsistent:false,
+  use:["Agent changed/added/removed service or submitted an order without explicit, documented customer consent","Consent was ambiguous, missing, or invalid under the scenario","Action changed the customer's service, bill, or order status"],
+  dontuse:["Customer clearly gave required consent/yes to the specific action","No service/order/account change occurred","Agent only discussed options without processing"],
+  evidence:["Exact customer response used as consent","Specific service/order change","Required consent language/standard"],
+  impact:"Customer may make a purchase/order decision without accurate price, product, consent, or expectation.",
+  disputes:["Treating 'okay'/'sure' as clear consent"]},
+
+  {id:46,cat:"SALES & ORDER INTEGRITY",name:"Canceling and reissuing orders",orig:"Canceling and reissuing orders (Done to gain duplicate sales credit)",cls:"D",type:"ZT",sanction:"Disciplinary Action",legacy:"Class D",rationale:"Compensation fraud.",source:"None listed",inconsistent:false,
+  use:["Agent canceled and reissued orders to gain duplicate sales credit","Behavior is sales-credit driven rather than customer/process driven","Order history supports duplicate/avoidable reissue"],
+  dontuse:["Reissue was required to correct a legitimate order error","Supervisor/process approval exists","No duplicate sales-credit motive or effect is supported"],
+  evidence:["Original order and reissued order records","Reason for cancellation/reissue","Sales-credit impact"],
+  impact:"Customer may make a purchase/order decision without accurate price, product, consent, or expectation.",
+  disputes:["Not proving improper motive or duplicate-credit outcome"]},
+
+  {id:47,cat:"MISREPRESENTATION & PROFESSIONAL CONDUCT",name:"Providing false information / false commitments",orig:"Providing false information / False commitments / Misleading internal teams",cls:"D",type:"ZT",sanction:"Disciplinary Action",legacy:"Class D",rationale:"Gross Misconduct. Intentional dishonesty, breaking trust with customers and colleagues.",source:"None listed",inconsistent:false,
+  use:["Agent provided false information/commitment or misled internal teams","Statement/commitment was presented as fact or completed action","It was false, unsupported, or materially misleading"],
+  dontuse:["Agent gave a good-faith estimate and set uncertainty","Agent corrected the statement before action/impact","No customer/internal reliance or material risk exists"],
+  evidence:["Exact false statement/commitment","Correct facts/system proof","Who was misled and impact"],
+  impact:"Professional conduct, customer trust, internal alignment, and business integrity risk.",
+  disputes:["No proof the commitment was false at the time"]},
+
+  {id:48,cat:"MISREPRESENTATION & PROFESSIONAL CONDUCT",name:"Disrespectful language",orig:"Disrespectful language (Foul, condescending, or argumentative language toward customers or coworkers)",cls:"D",type:"ZT",sanction:"Disciplinary Action",legacy:"Class D",rationale:"Gross Misconduct. Creates a hostile environment and severe brand damage.",source:"None listed",inconsistent:false,
+  use:["Agent used foul, condescending, argumentative, insulting, or clearly disrespectful language","Wording itself is inappropriate; not just lack of empathy","Language is directed to customer/coworker or visible in work context"],
+  dontuse:["Agent sounded robotic or lacked warmth only","Agent used firm but professional language","Customer was upset but agent remained professional"],
+  evidence:["Exact disrespectful language","Context and recipient/visibility","Why it violates professional conduct"],
+  impact:"Professional conduct, customer trust, internal alignment, and business integrity risk.",
+  disputes:["Using conduct violation for tone/coaching issues"]},
+
+  {id:49,cat:"MISREPRESENTATION & PROFESSIONAL CONDUCT",name:"Unprofessional internal chats",orig:"Unprofessional internal chats (Sarcasm, passive aggression, or visible frustration)",cls:"D",type:"ZT",sanction:"Disciplinary Action",legacy:"Class D",rationale:"Damages internal morale and professionalism.",source:"None listed",inconsistent:false,
+  use:["Agent used sarcasm, passive aggression, visible frustration, or unprofessional language in internal chat","Chat is work-related and visible to coworkers/leaders","Language creates professionalism, morale, or conduct risk"],
+  dontuse:["Internal note/chat is neutral, brief, or process-related","No unprofessional wording is present","Private non-work content is not in scope"],
+  evidence:["Exact internal chat wording","Channel/context","Why it is unprofessional"],
+  impact:"Professional conduct, customer trust, internal alignment, and business integrity risk.",
+  disputes:["No evidence of visibility or work context"]}
+];
+
+// ============================
+// VIEWS
+// ============================
+function showView(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
+  document.querySelectorAll('.nav-btn')[['overview','decision','reference'].indexOf(name)].classList.add('active');
+  if (name === 'decision') initDecisionTree();
+  if (name === 'reference') renderCards();
+  updateSidebar(name);
+}
+
+// ============================
+// SIDEBAR
+// ============================
+function updateSidebar(view) {
+  const sb = document.getElementById('sidebar');
+  if (view !== 'reference' && view !== 'decision') { sb.innerHTML = ''; return; }
+
+  const cats = ['A','B','C','D'];
+  const labels = {A:'Class A — SQV · Verbal Warning', B:'Class B — SQV · Written Warning', C:'Class C — ZT · Final Written', D:'Class D — ZT · Disciplinary'};
+  sb.innerHTML = '';
+  cats.forEach(cls => {
+    const items = SCENARIOS.filter(s => s.cls === cls);
+    const sec = document.createElement('div');
+    sec.className = 'sidebar-section';
+    sec.textContent = labels[cls];
+    sb.appendChild(sec);
+    items.forEach(s => {
+      const el = document.createElement('div');
+      el.className = 'sidebar-item';
+      el.innerHTML = `<span class="item-num">${s.id}</span><span style="flex:1;font-size:11px;line-height:1.3">${s.name}</span><span class="item-class class-${cls.toLowerCase()}">${cls}</span>`;
+      el.onclick = () => { if (view === 'reference') openModal(s.id); else { showView('reference'); setTimeout(() => openModal(s.id), 100); }};
+      sb.appendChild(el);
+    });
+  });
+}
+
+// ============================
+// REFERENCE CARDS
+// ============================
+let activeFilters = new Set();
+
+function renderCards() {
+  const grid = document.getElementById('scenario-grid');
+  const query = (document.getElementById('search-input').value || '').toLowerCase();
+  grid.innerHTML = '';
+
+  const filtered = SCENARIOS.filter(s => {
+    if (activeFilters.size && !activeFilters.has(s.cls)) return false;
+    if (!query) return true;
+    return (s.name + s.cat + s.orig + s.rationale).toLowerCase().includes(query);
+  });
+
+  if (!filtered.length) {
+    grid.innerHTML = '<div class="no-results">No scenarios match your search.</div>';
+    return;
+  }
+
+  filtered.forEach(s => {
+    const el = document.createElement('div');
+    el.className = `scenario-card c${s.cls.toLowerCase()}`;
+    el.innerHTML = `
+      <div class="card-top">
+        <span class="card-num">#${String(s.id).padStart(2,'0')}</span>
+        <div class="card-badges">
+          <span class="badge-type ${s.type === 'SQV' ? 'sqv-badge' : 'zt-badge'}">${s.type}</span>
+          <span class="item-class class-${s.cls.toLowerCase()}">${s.cls}</span>
+        </div>
+      </div>
+      <div class="card-name">${s.name}</div>
+      <div class="card-category">${s.cat}</div>
+    `;
+    el.onclick = () => openModal(s.id);
+    grid.appendChild(el);
+  });
+  updateSidebar('reference');
+}
+
+function filterCards() { renderCards(); }
+
+function toggleFilter(cls) {
+  if (activeFilters.has(cls)) activeFilters.delete(cls);
+  else activeFilters.add(cls);
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('on'));
+  activeFilters.forEach(c => { const btn = document.getElementById('f'+c); if(btn) btn.classList.add('on'); });
+  renderCards();
+}
+
+function clearFilters() {
+  activeFilters.clear();
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('on'));
+  renderCards();
+}
+
+// ============================
+// MODAL
+// ============================
+function openModal(id) {
+  const s = SCENARIOS.find(x => x.id === id);
+  if (!s) return;
+  const clsColor = {A:'var(--accent-a)',B:'var(--accent-b)',C:'var(--accent-c)',D:'var(--accent-d)'}[s.cls];
+  const template = `Valid ${s.type} - Class ${s.cls}: The agent [specific behavior] matches the matrix scenario '${s.orig}' because [exact transcript/system evidence]. This created [impact]. FPS COD Reference: [official lookup required].`;
+
+  document.getElementById('modal-content').innerHTML = `
+    <div class="modal-header">
+      <div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="dt-result-badge badge-${s.cls.toLowerCase()}">${s.type} · CLASS ${s.cls}</span>
+          ${s.inconsistent ? `<span style="font-family:var(--mono);font-size:10px;color:var(--accent-b);border:1px solid rgba(245,158,11,0.3);padding:2px 8px;border-radius:2px">⚠ Source Inconsistency</span>` : ''}
+        </div>
+        <div style="font-size:18px;font-weight:700;line-height:1.3">#${String(s.id).padStart(2,'0')} — ${s.name}</div>
+        <div style="font-size:12px;color:var(--text-muted);font-family:var(--mono);margin-top:4px">${s.cat}</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      ${s.inconsistent ? `<div class="inconsistency-note">
+        <strong>⛔ STRICT RULE — SEVERITY ENFORCEMENT</strong><br>
+        The New Sanction column shows <strong>Class ${s.cls}</strong>. The legacy/suggested field shows <strong>${s.legacy}</strong>.<br><br>
+        The New Sanction column is the <strong>only valid source for severity</strong>. The legacy/suggested field is display-only and <strong>cannot be used for grading, justification, or escalation</strong>. Applying ${s.legacy} here is a misclassification.
+      </div>` : ''}
+      ${s.source && s.source !== 'None listed' ? `<div class="source-note">ℹ Source Note / Exception: ${s.source}</div>` : ''}
+
+      <div class="modal-meta">
+        <div class="meta-item"><div class="meta-label">Severity</div><div class="meta-value" style="color:${clsColor}">Class ${s.cls}</div></div>
+        <div class="meta-item"><div class="meta-label">Type</div><div class="meta-value">${s.type}</div></div>
+        <div class="meta-item"><div class="meta-label">Sanction</div><div class="meta-value" style="font-size:11px">${s.sanction}</div></div>
+        <div class="meta-item"><div class="meta-label">Legacy Class</div><div class="meta-value" style="color:var(--text-muted);font-size:11px">${s.legacy}</div></div>
+        <div class="meta-item" style="grid-column:1/-1"><div class="meta-label">FPS COD Reference</div><div class="meta-value" style="font-size:11px;color:var(--text-muted)">Matrix lookup required — not present in ZT + SQV Items CSV</div></div>
+      </div>
+
+      <div class="section-head">Rationale</div>
+      <p style="font-size:13px;color:var(--text-dim);margin-bottom:24px;line-height:1.6">${s.rationale}</p>
+
+      <div class="section-head">Use This When</div>
+      <ul class="check-list" style="margin-bottom:24px">
+        ${s.use.map(u => `<li>${u}</li>`).join('')}
+      </ul>
+
+      <div class="section-head">Do NOT Use This When</div>
+      <ul class="check-list no-list" style="margin-bottom:24px">
+        ${s.dontuse.map(u => `<li>${u}</li>`).join('')}
+      </ul>
+
+      <div class="section-head">Required Evidence</div>
+      <ul class="check-list" style="margin-bottom:24px">
+        ${s.evidence.map(e => `<li>${e}</li>`).join('')}
+      </ul>
+
+      <div class="section-head">Impact to Document</div>
+      <p style="font-size:13px;color:var(--text-dim);margin-bottom:24px;line-height:1.6">${s.impact}</p>
+
+      <div class="section-head">Common Dispute Risk / QA Protection</div>
+      <ul class="check-list no-list" style="margin-bottom:24px">
+        ${s.disputes.map(d => `<li>${d}</li>`).join('')}
+      </ul>
+
+      <div class="section-head">QA Callout Template</div>
+      <div class="callout-template">${template}</div>
+
+      <div class="section-head" style="margin-bottom:12px">Original Violation Scenario</div>
+      <p style="font-size:12px;color:var(--text-muted);font-family:var(--mono);line-height:1.7;background:var(--bg);padding:14px;border:1px solid var(--border);border-radius:2px">${s.orig}</p>
+    </div>
+  `;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('modal-overlay')) {
+    document.getElementById('modal-overlay').classList.remove('open');
+  }
+}
+
+// ============================
+// DECISION TREE — YES/NO STRICT ENGINE
+// ============================
+// STRICT MAPPING: Every terminal path resolves to EXACTLY ONE scenario.
+// No multi-scenario outputs. All ambiguity resolved via tie-break questions BEFORE output.
+// Intent gating applied EARLY in Sales section.
+// Coaching boundary defined at root level.
+//
+// COACHING = No material impact + no policy breach
+// VIOLATION = Policy breach confirmed OR measurable customer/business impact documented
+//
+// Evidence rule: If timestamp or objective system proof is missing → default INVALID.
+// Do not infer, assume, or accept interpretive evidence as substitute for objective record.
+
+const DT_NODES = {
+
+  // ════════════════════════════════════════════
+  // GATE 0: COACHING vs VIOLATION BOUNDARY
+  // ════════════════════════════════════════════
+  start: {
+    q: 'Was there a measurable policy breach OR documented customer/business impact — not merely a coaching opportunity or quality preference?',
+    hint: 'COACHING = No material impact, no policy breach. VIOLATION = Policy breached OR customer/business harm documented. If unsure, answer No.',
+    yes: 'q_agent_control',
+    no: 'coaching'
+  },
+
+  // ════════════════════════════════════════════
+  // GATE 1: AGENT CONTROL
+  // ════════════════════════════════════════════
+  q_agent_control: {
+    q: 'Was the behavior clearly within the agent\'s direct control — not caused by a system issue, tool failure, customer constraint, or approved supervisor exception?',
+    hint: 'Tracked system outages, documented tool failures, and supervisor-approved exceptions are NOT agent-controlled. When in doubt, answer No.',
+    yes: 'q_evidence_objective',
+    no: 'coaching'
+  },
+
+  // ════════════════════════════════════════════
+  // GATE 2: EVIDENCE QUALITY
+  // ════════════════════════════════════════════
+  q_evidence_objective: {
+    q: 'Is the evidence objective and verifiable — timestamped transcript, system record, or official process reference (not interpretation or inference)?',
+    hint: 'STRICT RULE: Missing timestamp or system proof = INVALID. Do not substitute inferred or interpretive evidence. If only partial evidence exists, answer No.',
+    yes: 'q_domain',
+    no: 'invalid'
+  },
+
+  // ════════════════════════════════════════════
+  // GATE 3: DOMAIN ROUTING
+  // ════════════════════════════════════════════
+  q_domain: {
+    q: 'Does the issue primarily involve documentation, notes, or case/chat closure?',
+    yes: 'q_notes_falsified',
+    no: 'q_domain_avoidance'
+  },
+
+  q_domain_avoidance: {
+    q: 'Does the issue primarily involve call/chat avoidance, transfers, dead air, or hold misuse?',
+    yes: 'q_avoid_hold',
+    no: 'q_domain_privacy'
+  },
+
+  q_domain_privacy: {
+    q: 'Does the issue primarily involve data privacy, account security, credentials, or validation?',
+    yes: 'q_priv_credentials',
+    no: 'q_domain_sales'
+  },
+
+  q_domain_sales: {
+    q: 'Does the issue primarily involve a sale, service change, order, consent, pricing, or product representation?',
+    yes: 'q_sales_order_changed',
+    no: 'q_domain_conduct'
+  },
+
+  q_domain_conduct: {
+    q: 'Does the issue primarily involve professional conduct, language, honesty, or disengagement?',
+    yes: 'q_conduct_language',
+    no: 'q_workflow_skip'
+  },
+
+  // ════════════════════════════════════════════
+  // SECTION A: DOCUMENTATION & NOTES
+  // ════════════════════════════════════════════
+  q_notes_falsified: {
+    q: 'Did the agent document an action, step, or disclosure that did NOT actually occur (falsified notes — not just vague or short)?',
+    hint: 'Falsification = documented something that never happened. Vague/incomplete = different scenario.',
+    yes: 'q_notes_false_scope',
+    no: 'q_notes_closure'
+  },
+
+  q_notes_false_scope: {
+    q: 'Does the falsification extend beyond troubleshooting steps — specifically covering legal disclosures, created tickets, or processed callbacks?',
+    yes: [31],   // #31 Falsifying notes (legal/tickets/callbacks) → Class C ZT
+    no: [14]     // #14 Falsifying notes (troubleshooting not performed) → Class B SQV
+  },
+
+  q_notes_closure: {
+    q: 'Is the issue specifically about closing a case/chat with a wrong disposition, or failing to disposition in HUB?',
+    hint: 'Wrong disposition = Improper case closure (#6). Failure to follow chat closure policy/timing = Chat closure non-compliance (#3). These are separate scenarios.',
+    yes: 'q_notes_closure_type',
+    no: 'q_notes_grammar'
+  },
+
+  q_notes_closure_type: {
+    q: 'Was the incorrect closure specifically about an invalid or missing HUB disposition (not just timing or process sequencing)?',
+    yes: [6],    // #6 Improper case closure → Class A SQV
+    no: [3]      // #3 Chat closure non-compliance → Class A SQV
+  },
+
+  q_notes_grammar: {
+    q: 'Are there five or more distinct grammar errors visible within a single chat — attributable to the agent (not templates or copied customer text)?',
+    yes: [1],    // #1 Grammar errors → Class A SQV
+    no: 'q_notes_vague'
+  },
+
+  q_notes_vague: {
+    q: 'Are the notes missing, vague, or entered with incorrect timestamps — in a way that affects continuity or accountability?',
+    yes: 'q_notes_vas_context',
+    no: 'q_notes_fees'
+  },
+
+  q_notes_vas_context: {
+    q: 'Was a VAS product sold during this interaction, and does the missing/incomplete documentation specifically relate to VAS product details, price, or MRC?',
+    hint: 'VAS doc failure is scenario #19 (Class B SQV). General documentation failure is scenario #2 (Class A SQV). Assign by primary gap, not both.',
+    yes: [19],   // #19 Missing VAS sales documentation → Class B SQV
+    no: [2]      // #2 Poor/vague/backdated documentation → Class A SQV
+  },
+
+  q_notes_fees: {
+    q: 'Did the agent fail to inform the customer about a required fee or charge during the interaction?',
+    yes: [21],   // #21 Non-disclosure of fees → Class C ZT
+    no: 'no_match'
+  },
+
+  // ════════════════════════════════════════════
+  // SECTION B: CALL/CHAT AVOIDANCE
+  // ════════════════════════════════════════════
+  q_avoid_hold: {
+    q: 'Did the agent place the customer on hold or allow dead air — without proper refresh or acknowledgment?',
+    yes: 'q_avoid_hold_disconnect',
+    no: 'q_avoid_transfer'
+  },
+
+  q_avoid_hold_disconnect: {
+    q: 'Did the hold or dead air result in the call disconnecting without the agent returning?',
+    yes: 'q_avoid_hold_callback',
+    no: 'q_avoid_hold_duration'
+  },
+
+  q_avoid_hold_callback: {
+    q: 'Was outbound calling (OB) confirmed as ON HOLD or suspended at the time — making a callback an approved exception?',
+    hint: 'If OB is on hold = No callback required. If OB was available and agent did not call back, that is a separate violation.',
+    yes: [26],   // #26 Hold/dead air misuse until disconnection (no callback issue) → Class C ZT
+    no: [28]     // #28 No Callbacks → Class C ZT (callback required, not done)
+  },
+
+  q_avoid_hold_duration: {
+    q: 'Was the dead air or hold period over 10 minutes without the agent refreshing the line?',
+    yes: [27],   // #27 Dead air abuse >10 min → Class C ZT
+    no: 'q_avoid_hold_4min'
+  },
+
+  q_avoid_hold_4min: {
+    q: 'Was the dead air or hold period between 4 and 10 minutes without the agent refreshing the line?',
+    yes: [11],   // #11 Dead air abuse 4–10 min → Class B SQV
+    no: 'no_match'
+  },
+
+  q_avoid_transfer: {
+    q: 'Did the agent make a transfer during the interaction?',
+    yes: 'q_avoid_transfer_needed',
+    no: 'q_avoid_inbound'
+  },
+
+  q_avoid_transfer_needed: {
+    q: 'Was the transfer actually necessary for the customer\'s issue — based on scope and applicable policy?',
+    yes: 'q_avoid_transfer_correct_dept',
+    no: [25]     // #25 Unnecessary Transfer → Class C ZT
+  },
+
+  q_avoid_transfer_correct_dept: {
+    q: 'Was the customer transferred to the correct department?',
+    yes: 'q_avoid_transfer_cold',
+    no: [10]     // #10 Incorrect Transfer → Class B SQV
+  },
+
+  q_avoid_transfer_cold: {
+    q: 'Was the transfer cold — no warm handoff, no notice to the customer, effectively abandoning the call?',
+    yes: [39],   // #39 Improper call endings / cold transfer → Class D ZT
+    no: 'no_match'
+  },
+
+  q_avoid_inbound: {
+    q: 'Did the agent fail to respond to or accept an inbound interaction?',
+    yes: 'q_avoid_inbound_type',
+    no: 'q_avoid_outbound'
+  },
+
+  q_avoid_inbound_type: {
+    q: 'Was the agent in post-call/wrap status or keeping a line open — rather than actively working on after-contact tasks?',
+    yes: 'q_avoid_wrap_severity',
+    no: 'q_avoid_ignore_duration'
+  },
+
+  q_avoid_wrap_severity: {
+    q: 'Was the post-call/wrap status clearly exceeding 2 minutes with visible evidence of call avoidance (not legitimate documentation time)?',
+    yes: [23],   // #23 Wrap time excessively >2 min → Class C ZT
+    no: [9]      // #9 Post-call status 1–2 min → Class B SQV
+  },
+
+  q_avoid_ignore_duration: {
+    q: 'Was the inbound interaction ignored for more than 30 seconds?',
+    yes: [22],   // #22 Ignoring inbound >30 sec → Class C ZT
+    no: 'q_avoid_ignore_10'
+  },
+
+  q_avoid_ignore_10: {
+    q: 'Was the inbound interaction ignored for at least 10 seconds (but not more than 30)?',
+    yes: [8],    // #8 Ignoring inbound 10–30 sec → Class B SQV
+    no: 'q_avoid_outbound'
+  },
+
+  q_avoid_outbound: {
+    q: 'Did the agent make outbound calls that were NOT required by process — apparently to avoid taking inbound calls?',
+    yes: [24],   // #24 Avoiding inbound flow → Class C ZT
+    no: 'q_avoid_drop'
+  },
+
+  q_avoid_drop: {
+    q: 'Did the agent deliberately drop or disconnect the call without proper closure — not a system disconnect?',
+    yes: [39],   // #39 Improper call endings → Class D ZT
+    no: 'q_avoid_false_report'
+  },
+
+  q_avoid_false_report: {
+    q: 'Did the agent report a system or phone issue to justify the behavior — without proper escalation or verifiable evidence of a real issue?',
+    yes: [38],   // #38 False issue reporting → Class D ZT
+    no: 'q_avoid_chat_inactive'
+  },
+
+  q_avoid_chat_inactive: {
+    q: 'Were there two or more instances of 2+ minute chat gaps, or a single gap over 5 minutes — unexcused?',
+    yes: [4],    // #4 Chat inactivity → Class A SQV
+    no: 'no_match'
+  },
+
+  // ════════════════════════════════════════════
+  // SECTION C: DATA PRIVACY & SECURITY
+  // ════════════════════════════════════════════
+  q_priv_credentials: {
+    q: 'Did the agent log in using another employee\'s credentials, or allow another person to use their credentials?',
+    yes: [40],   // #40 Unauthorized system access → Class D ZT
+    no: 'q_priv_spi'
+  },
+
+  q_priv_spi: {
+    q: 'Did the agent share, store, or disclose SPI or PCI data — such as payment card numbers or sensitive personal identifiers — outside approved handling channels?',
+    yes: [41],   // #41 SPI/PCI data mishandling → Class D ZT
+    no: 'q_priv_tools'
+  },
+
+  q_priv_tools: {
+    q: 'Did the agent use a third-party or unapproved platform to manage, store, or transmit any customer or account data?',
+    yes: [42],   // #42 Unapproved tools usage → Class D ZT
+    no: 'q_priv_cpni_change'
+  },
+
+  q_priv_cpni_change: {
+    q: 'Was there an account change performed — such as VM PIN change, TCF activation, factory reset, or adding/removing equipment?',
+    yes: 'q_priv_cpni_force_val',
+    no: 'q_priv_cpni_disclosure_type'
+  },
+
+  q_priv_cpni_force_val: {
+    q: 'Did the agent perform force validation or unlock the account using a PIN, passcode, or alternative auth method — without properly notifying the customer of the method used?',
+    hint: 'This is scenario #43 (Class D ZT). If validation was attempted but simply incomplete or missing (not force validation), use scenario #29.',
+    yes: [43],   // #43 CPNI – force validation without notification → Class D ZT
+    no: [29]     // #29 CPNI – account change with missed/incomplete validation → Class C ZT
+  },
+
+  q_priv_cpni_disclosure_type: {
+    q: 'Did the agent disclose sensitive account info — specifically PIN, passcode, or subscription details (not just account name, Wi-Fi name, or email)?',
+    hint: 'Sensitive info (PIN/passcode/subs) = #29 Class C ZT. Basic info (name/Wi-Fi/email) with no account change = #13 Class B SQV.',
+    yes: [29],   // #29 CPNI – sensitive info disclosure → Class C ZT
+    no: 'q_priv_basic_disclosure'
+  },
+
+  q_priv_basic_disclosure: {
+    q: 'Did the agent disclose basic account info such as account name, Wi-Fi name, or email — without account changes?',
+    yes: [13],   // #13 CPNI – basic disclosure, no account change → Class B SQV
+    no: 'q_priv_overval'
+  },
+
+  q_priv_overval: {
+    q: 'Did the agent validate or authenticate the account when validation was NOT required for that contact type — unnecessarily collecting or verifying account credentials?',
+    yes: [5],    // #5 Over Validation → Class A SQV
+    no: 'q_priv_unauth_share'
+  },
+
+  q_priv_unauth_share: {
+    q: 'Did the agent share an internal-only or unapproved third-party contact number or resource directly with the customer?',
+    yes: [12],   // #12 Unauthorized data sharing → Class B SQV
+    no: 'no_match'
+  },
+
+  // ════════════════════════════════════════════
+  // SECTION D: SALES & ORDER INTEGRITY
+  // Intent gating applied FIRST — before behavior classification.
+  // ════════════════════════════════════════════
+  q_sales_order_changed: {
+    q: 'Was a service actually added, changed, removed, or an order submitted — not just discussed or offered?',
+    hint: 'If no action was processed, most sales violations do not apply. Discussion alone ≠ violation.',
+    yes: 'q_sales_intent_first',
+    no: 'q_sales_info_only'
+  },
+
+  // ── INTENT GATE (early — before behavior split) ──
+  q_sales_intent_first: {
+    q: 'Is there verifiable evidence that the agent acted with deliberate intent to deceive or manipulate — not just a process error or misunderstanding?',
+    hint: 'Intent = knowingly false statements, deliberate omission, or manipulation for personal gain. Process error = wrong step taken without deceptive motive. When not clearly verifiable, answer No.',
+    yes: 'q_sales_intent_type',
+    no: 'q_sales_process_error'
+  },
+
+  // ── INTENTIONAL BRANCH ──
+  q_sales_intent_type: {
+    q: 'Was the deceptive intent specifically aimed at adding or changing services without the customer\'s knowledge or genuine agreement?',
+    yes: 'q_sales_slam_vs_unauth',
+    no: 'q_sales_info_intent_type'
+  },
+
+  // FIX #5: Slamming vs Unauthorized — now split by intent clarity
+  q_sales_slam_vs_unauth: {
+    q: 'Is there clear evidence the agent deliberately manipulated or deceived the customer to change services — not merely processed a change without documented consent?',
+    hint: 'Slamming (#44) = fraud intent, deliberate deception. Unauthorized change (#45) = process failure, change without documented consent but no proven manipulative intent. This distinction determines Class D vs Class D — but the scenario cited must be exact.',
+    yes: [44],   // #44 Slamming or cramming → Class D ZT (fraud intent confirmed)
+    no: [45]     // #45 Unauthorized service changes → Class D ZT (process failure, no fraud intent)
+  },
+
+  q_sales_info_intent_type: {
+    q: 'Was the intentional false information specifically about pricing — misquoting the MRC or NRC?',
+    hint: 'Pricing misquote (#30) and lying about features (#33) are separate scenarios. Cite only the one that matches the exact behavior.',
+    yes: [30],   // #30 Incorrect pricing / intentional incomplete disclosure → Class C ZT
+    no: 'q_sales_intent_promo'
+  },
+
+  q_sales_intent_promo: {
+    q: 'Did the agent offer or promise a promotion, credit, or discount that was not approved or authorized — used to influence the sale?',
+    yes: [32],   // #32 Offering unapproved promotions/credits → Class C ZT
+    no: [33]     // #33 Lying about product features/pricing/promotions → Class C ZT
+  },
+
+  // ── PROCESS ERROR BRANCH (no proven intent) ──
+  q_sales_process_error: {
+    q: 'Did the agent obtain a clear and explicit YES from the customer before making the service change (not just "OK," "uhum," or "sure")?',
+    hint: '"OK," "uhum," and "sure" are NOT valid consent per matrix. A clear YES must be on record.',
+    yes: 'q_sales_correct_product',
+    no: 'q_sales_consent_gap_type'
+  },
+
+  q_sales_consent_gap_type: {
+    q: 'Was there zero consent of any kind captured — no agreement, no acknowledgment, no response on record?',
+    hint: 'Zero consent = process gap that may indicate slamming but without proven intent → Unauthorized service change (#45). Ambiguous consent (OK/sure/uhum) = Failure to gain clear consent (#35).',
+    yes: [45],   // #45 Unauthorized service changes → Class D ZT (no consent, no fraud intent proven)
+    no: [35]     // #35 Failure to gain clear customer consent → Class C ZT
+  },
+
+  q_sales_correct_product: {
+    q: 'Was the product or service that was processed the same one the customer agreed to?',
+    yes: 'q_sales_cancel_reissue',
+    no: [34]     // #34 Incorrect product/VAS added → Class C ZT
+  },
+
+  q_sales_cancel_reissue: {
+    q: 'Did the agent cancel an existing order and reissue it — with evidence this was done to gain duplicate sales credit rather than to correct an error?',
+    yes: [46],   // #46 Canceling and reissuing orders → Class D ZT
+    no: 'q_sales_core_service'
+  },
+
+  q_sales_core_service: {
+    q: 'Did the agent remove a core service (Internet, Phone, or Cable) without transferring to Retention first?',
+    yes: [18],   // #18 Removing core services without retention path → Class B SQV
+    no: 'no_match'
+  },
+
+  // ── INFO-ONLY BRANCH (no order processed) ──
+  q_sales_info_only: {
+    q: 'Is there verifiable evidence the agent deliberately provided false information about a product, price, promotion, or benefit — knowingly presenting it as fact?',
+    hint: 'INTENT GATE: Deliberate = knowingly false. If unclear whether deliberate, answer No and use misrepresentation path.',
+    yes: 'q_sales_info_intent_type',
+    no: 'q_sales_info_misrep'
+  },
+
+  q_sales_info_misrep: {
+    q: 'Did the agent describe a product or service inaccurately or misleadingly — even without proven deliberate intent?',
+    yes: [20],   // #20 Misrepresentation of products/services → Class B SQV
+    no: 'q_sales_urgency'
+  },
+
+  q_sales_urgency: {
+    q: 'Did the agent create a false sense of urgency — stating or implying an offer was limited-time when it was not verified as such?',
+    yes: [15],   // #15 False limited-time offer urgency → Class B SQV
+    no: 'q_sales_churn'
+  },
+
+  q_sales_churn: {
+    q: 'Did the agent actively encourage the customer to cancel, devalue the product, or position cancellation as a reasonable path — not merely acknowledge the customer\'s own cancellation intent?',
+    yes: [17],   // #17 Churn language / devaluing product → Class B SQV
+    no: 'q_sales_vas_loss'
+  },
+
+  q_sales_vas_loss: {
+    q: 'Did the agent replace a VAS without explaining what the customer would lose, OR prioritize selling over resolving the customer\'s primary issue?',
+    yes: [16],   // #16 Failure to explain VAS loss / sales before resolution → Class B SQV
+    no: 'no_match'
+  },
+
+  // ════════════════════════════════════════════
+  // SECTION E: PROFESSIONAL CONDUCT
+  // ════════════════════════════════════════════
+  q_conduct_language: {
+    q: 'Did the agent use foul, condescending, or argumentative language — directed at the customer or a coworker in a work context?',
+    hint: 'Foul/condescending = disrespectful language (#48). Sarcasm/passive aggression in internal chat = unprofessional internal chats (#49). These are separate scenarios.',
+    yes: [48],   // #48 Disrespectful language → Class D ZT
+    no: 'q_conduct_internal'
+  },
+
+  q_conduct_internal: {
+    q: 'Did the agent use sarcasm, passive aggression, or visible frustration in internal (work-context) chats visible to coworkers or leaders?',
+    yes: [49],   // #49 Unprofessional internal chats → Class D ZT
+    no: 'q_conduct_false_info'
+  },
+
+  q_conduct_false_info: {
+    q: 'Did the agent provide verifiably false information, make a false commitment, or deliberately mislead internal teams — presented as fact?',
+    hint: 'Must be verifiably false, not a good-faith estimate. Agent must have known or should have known the statement was false.',
+    yes: [47],   // #47 Providing false information/commitments → Class D ZT
+    no: 'q_conduct_escalation'
+  },
+
+  q_conduct_escalation: {
+    q: 'Did the agent refuse or fail to escalate/de-escalate when required by process, or refuse a customer\'s explicit request for a supervisor call?',
+    yes: [36],   // #36 Escalation failure → Class C ZT
+    no: 'q_conduct_disengaged'
+  },
+
+  q_conduct_disengaged: {
+    q: 'Did the agent perform unrelated activities instead of assisting the customer — verifiable through transcript, system record, or observable inactivity?',
+    hint: 'Must be provable via evidence. Delay alone does not equal disengagement.',
+    yes: [37],   // #37 Disengaged behavior → Class C ZT
+    no: 'no_match'
+  },
+
+  // ════════════════════════════════════════════
+  // SECTION F: WORKFLOW
+  // ════════════════════════════════════════════
+  q_workflow_skip: {
+    q: 'Did the agent skip required troubleshooting steps or use the wrong workflow — such as skipping a required line test?',
+    hint: 'All non-agent opportunity (system and tool failures) should be coaching only, not an SQV.',
+    yes: [7],    // #7 Incorrect workflow / skipped troubleshooting → Class B SQV
+    no: 'no_match'
+  }
+};
+
+// Terminal states
+const DT_TERMINALS = {
+  coaching: {
+    type: 'coaching',
+    title: 'Coaching Only — Not an SQV or ZT',
+    msg: '<strong>COACHING BOUNDARY:</strong> A behavior qualifies as Coaching Only when there is no measurable policy breach AND no documented customer/business impact. This includes: system-caused behavior, tool failures, customer-caused constraints, approved supervisor exceptions, partial matrix matches, or quality preference gaps that do not breach policy. Address through coaching documentation only — do not issue a callout.'
+  },
+  invalid: {
+    type: 'invalid',
+    title: 'Cannot Issue Callout — Evidence Does Not Meet Standard',
+    msg: '<strong>EVIDENCE RULE:</strong> Evidence must be objective and verifiable — timestamped transcript, system record, or official process reference. Interpretive or inferred evidence is NOT acceptable as a substitute. Missing timestamps = INVALID. Incomplete system proof = INVALID. Do not issue a callout until objective evidence is secured. A callout without complete evidence is subject to overturn during dispute.'
+  },
+  no_match: {
+    type: 'invalid',
+    title: 'No Exact Matrix Match — Cannot Issue Callout',
+    msg: '<strong>STRICT MAPPING RULE:</strong> Only an exact match to the original Violation Scenario warrants a callout. Do not use the closest fit. Do not combine scenarios. If no single scenario exactly matches the observed behavior, the result is Coaching Only or No Action. Review the Reference tab for all 49 scenarios and reassess.'
+  }
+};
+
+let dtHistory = []; // [{q, answer:'Yes'|'No'}]
+let dtCurrent = 'start';
+
+function initDecisionTree() {
+  dtHistory = [];
+  dtCurrent = 'start';
+  renderDT();
+}
+
+function dtAnswer(answer) {
+  const node = DT_NODES[dtCurrent];
+  if (!node) return;
+  dtHistory.push({ nodeId: dtCurrent, q: node.q, answer });
+  const next = answer === 'yes' ? node.yes : node.no;
+  dtCurrent = next;
+  renderDT();
+}
+
+function dtBack() {
+  if (!dtHistory.length) return;
+  const last = dtHistory.pop();
+  dtCurrent = last.nodeId;
+  renderDT();
+}
+
+function renderDT() {
+  const flow = document.getElementById('dt-flow');
+  const bc = document.getElementById('dt-breadcrumb');
+  flow.innerHTML = '';
+
+  // Breadcrumb trail
+  if (dtHistory.length) {
+    bc.style.display = 'flex';
+    bc.innerHTML = dtHistory.map((h, i) => `
+      <span class="dt-crumb ${h.answer === 'yes' ? 'crumb-yes' : 'crumb-no'}" title="${h.q}">
+        ${i+1}. ${h.answer === 'yes' ? 'YES' : 'NO'}
+      </span>
+    `).join('<span class="dt-crumb-sep">›</span>');
+  } else {
+    bc.style.display = 'none';
+  }
+
+  // Terminal states
+  if (DT_TERMINALS[dtCurrent]) {
+    renderTerminal(DT_TERMINALS[dtCurrent]);
+    return;
+  }
+
+  // Array of scenario IDs = final match
+  if (Array.isArray(dtCurrent)) {
+    renderMatches(dtCurrent);
+    return;
+  }
+
+  // Check if node.yes or node.no is an array (could have been set via dtAnswer)
+  if (Array.isArray(dtCurrent)) {
+    renderMatches(dtCurrent);
+    return;
+  }
+
+  const node = DT_NODES[dtCurrent];
+  if (!node) { renderTerminal(DT_TERMINALS['no_match']); return; }
+
+  const stepNum = dtHistory.length + 1;
+
+  const el = document.createElement('div');
+  el.className = 'dt-step';
+
+  // Progress indicator
+  const total = 8;
+  const pct = Math.min(100, Math.round((dtHistory.length / total) * 100));
+
+  el.innerHTML = `
+    <div class="dt-progress-bar"><div class="dt-progress-fill" style="width:${pct}%"></div></div>
+    <div class="dt-step-label">Question ${stepNum}</div>
+    <div class="dt-question">${node.q}</div>
+    ${node.hint ? `<div class="dt-hint">ℹ ${node.hint}</div>` : ''}
+    <div class="dt-yn-wrap">
+      <button class="dt-yn yes" onclick="dtAnswer('yes')">
+        <span class="yn-icon">✓</span> Yes
+      </button>
+      <button class="dt-yn no" onclick="dtAnswer('no')">
+        <span class="yn-icon">✕</span> No
+      </button>
+    </div>
+    ${dtHistory.length > 0 ? `<button class="dt-back-btn" onclick="dtBack()">← Back</button>` : ''}
+  `;
+
+  flow.appendChild(el);
+}
+
+function renderTerminal(t) {
+  const flow = document.getElementById('dt-flow');
+  const cls = t.type === 'coaching' ? 'result-coaching' : 'result-invalid';
+  const badge = t.type === 'coaching' ? 'badge-coaching' : 'NO VALID CALLOUT';
+  const label = t.type === 'coaching' ? 'COACHING ONLY' : 'NO VALID CALLOUT';
+  flow.innerHTML = `
+    <div class="dt-result ${cls}">
+      <span class="dt-result-badge ${t.type === 'coaching' ? 'badge-coaching' : 'badge-invalid'}">${label}</span>
+      <h3>${t.title}</h3>
+      <p style="margin-top:12px;line-height:1.7">${t.msg}</p>
+      <div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap">
+        <button class="dt-reset-btn" onclick="dtBack()">← Back</button>
+        <button class="dt-reset-btn" onclick="initDecisionTree()">↺ Start Over</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderMatches(ids) {
+  const flow = document.getElementById('dt-flow');
+  // STRICT MAPPING: ids should always be length 1 after fixes.
+  // If somehow more than 1 arrives, render all but flag it.
+  const matched = ids.map(id => SCENARIOS.find(s => s.id === id)).filter(Boolean);
+  if (!matched.length) { renderTerminal(DT_TERMINALS['no_match']); return; }
+
+  const clsColor = {A:'var(--accent-a)',B:'var(--accent-b)',C:'var(--accent-c)',D:'var(--accent-d)'};
+  const clsResult = {A:'result-a',B:'result-b',C:'result-c',D:'result-d'};
+  const badgeMap = {A:'badge-a',B:'badge-b',C:'badge-c',D:'badge-d'};
+
+  const topCls = matched[0].cls;
+  const wrapper = document.createElement('div');
+
+  wrapper.innerHTML = `
+    <div class="dt-result ${clsResult[topCls]}" style="margin-bottom:16px">
+      <span class="dt-result-badge ${badgeMap[topCls]}">CALLOUT IDENTIFIED — STRICT MATCH</span>
+      <h3 style="margin-bottom:4px">${matched[0].name}</h3>
+      <p style="font-size:13px;color:var(--text-muted)">One scenario matched. Confirm the exact behavior before issuing.</p>
+    </div>
+  `;
+
+  matched.forEach(s => {
+    const card = document.createElement('div');
+    card.className = 'dt-match-card';
+    card.style.borderLeftColor = clsColor[s.cls];
+    card.innerHTML = `
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px">
+        <div>
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">
+            <span class="dt-result-badge ${badgeMap[s.cls]}" style="font-size:9px;padding:2px 8px">${s.type} · CLASS ${s.cls}</span>
+            ${s.inconsistent ? `<span style="font-family:var(--mono);font-size:9px;color:var(--accent-b);border:1px solid rgba(245,158,11,0.3);padding:1px 6px;border-radius:2px">⚠ Inconsistency</span>` : ''}
+          </div>
+          <div style="font-size:15px;font-weight:700">#${s.id} — ${s.name}</div>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--text-muted);margin-top:3px">${s.cat}</div>
+        </div>
+        <span style="font-family:var(--mono);font-size:11px;color:var(--text-muted);white-space:nowrap">${s.sanction}</span>
+      </div>
+      <p style="font-size:12px;color:var(--text-dim);line-height:1.6;margin-bottom:12px">${s.rationale}</p>
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:2px;padding:12px;font-family:var(--mono);font-size:11px;color:var(--text-muted);line-height:1.7;margin-bottom:12px">
+        Valid ${s.type} - Class ${s.cls}: The agent [specific behavior] matches the matrix scenario '${s.orig}' because [exact transcript/system evidence]. This created [impact]. FPS COD Reference: [official lookup required].
+      </div>
+      <button class="dt-reset-btn" onclick="openModal(${s.id})" style="margin-right:8px">View Full Detail</button>
+    `;
+    wrapper.appendChild(card);
+  });
+
+  const footer = document.createElement('div');
+  footer.style = 'margin-top:16px;display:flex;gap:10px;flex-wrap:wrap';
+  footer.innerHTML = `
+    <button class="dt-reset-btn" onclick="dtBack()">← Back</button>
+    <button class="dt-reset-btn" onclick="initDecisionTree()">↺ Start Over</button>
+  `;
+  wrapper.appendChild(footer);
+  flow.appendChild(wrapper);
+}
+
+// INIT
+renderCards();
+updateSidebar('overview');
+</script>
+<style>
+.dt-progress-bar {
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.dt-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-b), var(--accent-c));
+  transition: width 0.4s ease;
+  border-radius: 2px;
+}
+.dt-yn-wrap {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+.dt-yn {
+  flex: 1;
+  padding: 16px 24px;
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 2px;
+  border: 2px solid;
+  transition: all 0.18s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  letter-spacing: 0.5px;
+}
+.dt-yn.yes {
+  background: rgba(16,185,129,0.06);
+  border-color: rgba(16,185,129,0.3);
+  color: #10b981;
+}
+.dt-yn.yes:hover {
+  background: rgba(16,185,129,0.15);
+  border-color: #10b981;
+  transform: translateY(-1px);
+}
+.dt-yn.no {
+  background: rgba(239,68,68,0.06);
+  border-color: rgba(239,68,68,0.3);
+  color: var(--accent-d);
+}
+.dt-yn.no:hover {
+  background: rgba(239,68,68,0.14);
+  border-color: var(--accent-d);
+  transform: translateY(-1px);
+}
+.yn-icon {
+  font-size: 18px;
+  font-weight: 700;
+}
+.dt-hint {
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--accent-b);
+  font-family: var(--mono);
+  background: rgba(245,158,11,0.06);
+  border: 1px solid rgba(245,158,11,0.2);
+  border-radius: 2px;
+  padding: 8px 12px;
+  line-height: 1.6;
+}
+.dt-back-btn {
+  margin-top: 16px;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 6px 14px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: all 0.2s;
+  border-radius: 2px;
+}
+.dt-back-btn:hover { border-color: var(--text-dim); color: var(--text); }
+.dt-match-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid;
+  border-radius: 2px;
+  padding: 20px;
+  margin-bottom: 14px;
+}
+.crumb-yes { color: #10b981; border-color: rgba(16,185,129,0.3) !important; }
+.crumb-no { color: var(--accent-d); border-color: rgba(239,68,68,0.3) !important; }
+</style>
+</body>
+</html>
